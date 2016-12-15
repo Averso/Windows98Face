@@ -1,0 +1,137 @@
+{
+    "author": "Averso",
+    "dependencies": {
+        "pebble-clay": "^1.0.3"
+    },
+    "keywords": [],
+    "name": "windows-98",
+    "pebble": {
+        "capabilities": [
+            "configurable"
+        ],
+        "displayName": "Windows 98",
+        "enableMultiJS": true,
+        "messageKeys": [
+            "bg_color",
+            "window_x",
+            "window_y",
+            "battery_warning_level",
+            "vibe_disconnect",
+            "center_pos",
+            "enable_window"
+        ],
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "file": "images/icon.png",
+                    "menuIcon": true,
+                    "name": "IMAGE_ICON",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/bt-off.png",
+                    "name": "IMAGE_BT_OFF",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/bt-on.png",
+                    "name": "IMAGE_BT_ON",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/window.png",
+                    "name": "IMAGE_WINDOW",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/desktop.png",
+                    "name": "IMAGE_DESKTOP",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/bar.png",
+                    "name": "IMAGE_MENUBAR",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/qt-off.png",
+                    "name": "IMAGE_QT_OFF",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/qt-on.png",
+                    "name": "IMAGE_QT_ON",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/battery_low.png",
+                    "name": "IMAGE_BATTERY_LOW",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/battery_high.png",
+                    "name": "IMAGE_BATTERY_HIGH",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "characterRegex": "[0-9:-]",
+                    "file": "fonts/Microsoft Sans Serif.ttf",
+                    "name": "FONT_TEXT_13",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[Chrg0-9:%]",
+                    "file": "fonts/Microsoft Sans Serif.ttf",
+                    "name": "FONT_TEXT_15",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "font"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "basalt"
+        ],
+        "uuid": "3ec6fe76-36cc-4a44-a467-6d76d8a09dd8",
+        "watchapp": {
+            "watchface": true
+        }
+    },
+    "version": "1.0.0"
+}
