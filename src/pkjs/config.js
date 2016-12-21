@@ -5,16 +5,40 @@ module.exports = [
   },
   {
     "type": "section",
+    
     "items": [
       {
         "type": "heading",
         "defaultValue": "Colors"
       },
       {
+        "type": "toggle",
+        "messageKey": "bg_color_bw",
+        "label": "Desktop color black/white",
+        "defaultValue": false,
+        "capabilities": ["PLATFORM_DIORITE"]
+      },
+      {
+        "type": "toggle",
+        "messageKey": "monochrome_enabled",
+        "label": "Monochrome",
+        "description": "Turns on monochrome theme. You can still change background and text color.",
+        "defaultValue": false,
+        "capabilities": ["COLOR"]
+      },
+      {
         "type": "color",
         "messageKey": "bg_color",
         "defaultValue": "0x00AAAA",
-        "label": "Background Color"
+        "label": "Background Color",
+        "capabilities": ["COLOR"]
+      },
+      {
+        "type": "color",
+        "messageKey": "text_color",
+        "defaultValue": "0xFFFFFF",
+        "label": "Desktop text color",
+        "capabilities": ["COLOR"]
       }
     ]
   },
@@ -47,28 +71,44 @@ module.exports = [
       {
         "type": "input",
         "messageKey": "window_x",
-        "defaultValue": "23",
-        "description": "Defaults 23",
+        "defaultValue": "19",
+        "description": "Default: 19. Max: 24.",
         "label": "X position",
         "attributes": {
         "type": "number",
-        "max":"28",
+        "max":"24",
         "min":"0"
       }
       },
       {
         "type": "input",
         "messageKey": "window_y",
-        "defaultValue": "23",
-        "description": "Default 23",
+        "defaultValue": "9",
+        "description": "Default: 9. Max: 16.",
         "label": "Y position",
         "attributes": {
         "type": "number",
-        "max":"32",
+        "max":"16",
         "min":"0"
-      }
-     }
-    ]}      
+        }
+      }  
+      ]},
+      {
+      "type": "section",
+      "items": [
+      {
+        "type": "heading",
+        "defaultValue": "Others",       
+      },
+      {
+        "type": "toggle",
+        "messageKey": "date_format",
+        "label": "Date format",
+        "description": "dd-mm-yyyy/mm-dd-yyyy",
+        "defaultValue": false
+      }   
+      
+      ]}
        
     ]
   },
@@ -79,7 +119,14 @@ module.exports = [
       "type": "heading",
       "defaultValue": "Others"
       },
-        {
+      {
+        "type": "toggle",
+        "messageKey": "switch_bin_state",
+        "label": "Switch bin states",
+        "description": "Switch default low battery warning states for recycle bin. Set: low = empty; Unset: low = full.",
+        "defaultValue": false
+      },
+      {
         "type": "input",
         "messageKey": "battery_warning_level",
         "defaultValue": "40",

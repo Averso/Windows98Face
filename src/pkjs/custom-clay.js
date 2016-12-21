@@ -19,12 +19,15 @@ module.exports = function() {
    if (this.get()) {
      centerPosToggle.enable();
      toggleXYPosition.call(centerPosToggle);
+     clayConfig.getItemByMessageKey('date_format').enable();
     } else {
      centerPosToggle.disable();
       clayConfig.getItemByMessageKey('window_x').disable();
      clayConfig.getItemByMessageKey('window_y').disable();
+      clayConfig.getItemByMessageKey('date_format').disable();
     }
   }
+  
   
  
     
@@ -38,9 +41,6 @@ module.exports = function() {
     windowToggle = clayConfig.getItemByMessageKey('enable_window');      
     togglePosition.call(windowToggle);
     windowToggle.on('change', togglePosition);
-    
-   
-    
     
    
   });

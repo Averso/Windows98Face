@@ -13,8 +13,16 @@ void bluetooth_callback(bool connected) {
   }
   
   //show/hide bluetooth icon depending on connection
-  bitmap_layer_set_bitmap(layer_bt, (connected) ? bitmap_bt_on : bitmap_bt_off);
-//   layer_set_hidden(bitmap_layer_get_layer(layer_bt), connected);
+  #ifdef PBL_COLOR
+  if(settings.monochrome_enabled)
+    bitmap_layer_set_bitmap(layer_bt, (connected) ? bitmap_bt_on_bw : bitmap_bt_off_bw);
+  else
+    bitmap_layer_set_bitmap(layer_bt, (connected) ? bitmap_bt_on : bitmap_bt_off);
+  #else
+  bitmap_layer_set_bitmap(layer_bt, (connected) ? bitmap_bt_on_bw : bitmap_bt_off_bw);
+  #endif
+  
+  //layer_set_hidden(bitmap_layer_get_layer(layer_bt), connected);
   
   
   //vibrate just once based on previous status
@@ -57,12 +65,30 @@ void battery_callback(BatteryChargeState state)
 void battery_update_trashbin()
 { 
   //change vaultboy image depending on battery lvl  
-  if(battery_level<=100 && battery_level>settings.battery_warning_level)
-  {  
-    bitmap_layer_set_bitmap(layer_battery, bitmap_battery_high);
-  }
+  if(battery_level<=100 && battery_level>settings.battery_warning_level)  
+  {
+   #ifdef PBL_COLOR
+   if(settings.monochrome_enabled)
+     bitmap_layer_set_bitmap(layer_battery, settings.switch_bin_state ? bitmap_battery_low_bw : bitmap_battery_high_bw);
+   else
+     bitmap_layer_set_bitmap(layer_battery, settings.switch_bin_state ? bitmap_battery_low : bitmap_battery_high);   
+   #else
+     bitmap_layer_set_bitmap(layer_battery, settings.switch_bin_state ? bitmap_battery_low_bw : bitmap_battery_high_bw);  
+   #endif
+  }   
   else    
-    bitmap_layer_set_bitmap(layer_battery, bitmap_battery_low);
+  {
+    #ifdef PBL_COLOR
+    if(settings.monochrome_enabled)
+      bitmap_layer_set_bitmap(layer_battery, settings.switch_bin_state ? bitmap_battery_high_bw : bitmap_battery_low_bw);
+    else
+      bitmap_layer_set_bitmap(layer_battery, settings.switch_bin_state ? bitmap_battery_high : bitmap_battery_low);
+   #else
+    bitmap_layer_set_bitmap(layer_battery, settings.switch_bin_state ? bitmap_battery_high_bw : bitmap_battery_low_bw);
+   #endif
+    
+  }
+    
   
   //not sure if necessary
   layer_mark_dirty(bitmap_layer_get_layer(layer_battery));

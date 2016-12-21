@@ -47,9 +47,12 @@ static void init(void) {
   
     //register for timer tick service
   tick_timer_service_subscribe(MINUTE_UNIT | DAY_UNIT, tick_handler);
+    
+  color_desktop_text = GColorWhite;
   
   //get time/date/battery for the first time
-  update_all();    
+  update_time();    
+  update_date();
   battery_callback(battery_state_service_peek());
     
 }

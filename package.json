@@ -18,11 +18,122 @@
             "battery_warning_level",
             "vibe_disconnect",
             "center_pos",
-            "enable_window"
+            "enable_window",
+            "text_color",
+            "switch_bin_state",
+            "date_format",
+            "monochrome_enabled",
+            "bg_color_bw"
         ],
         "projectType": "native",
         "resources": {
             "media": [
+                {
+                    "file": "images/bw-icon.png",
+                    "name": "IMAGE_ICON",
+                    "targetPlatforms": [
+                        "diorite"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/bw-qt-on.png",
+                    "name": "IMAGE_QT_ON_BW",
+                    "targetPlatforms": [
+                        "basalt",
+                        "diorite"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/bw-qt-off.png",
+                    "name": "IMAGE_QT_OFF_BW",
+                    "targetPlatforms": [
+                        "basalt",
+                        "diorite"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/bw-bt-off.png",
+                    "name": "IMAGE_BT_OFF_BW",
+                    "targetPlatforms": [
+                        "basalt",
+                        "diorite"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/bw-bt-on.png",
+                    "name": "IMAGE_BT_ON_BW",
+                    "targetPlatforms": [
+                        "basalt",
+                        "diorite"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/bw-battery_low.png",
+                    "name": "IMAGE_BATTERY_LOW_BW",
+                    "targetPlatforms": [
+                        "basalt",
+                        "diorite"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/bw-battery_high.png",
+                    "name": "IMAGE_BATTERY_HIGH_BW",
+                    "targetPlatforms": [
+                        "basalt",
+                        "diorite"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/bw-desktop-icons.png",
+                    "name": "IMAGE_DESKTOP_ICONS_BW",
+                    "targetPlatforms": [
+                        "basalt",
+                        "diorite"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/bw-window.png",
+                    "name": "IMAGE_WINDOW_BW",
+                    "targetPlatforms": [
+                        "basalt",
+                        "diorite"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/bw-menubar.png",
+                    "name": "IMAGE_MENUBAR_BW",
+                    "targetPlatforms": [
+                        "basalt",
+                        "diorite"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/desktop-text.png",
+                    "name": "IMAGE_DESKTOP_TEXT",
+                    "targetPlatforms": [
+                        "basalt",
+                        "diorite"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/desktop-icons.png",
+                    "name": "IMAGE_DESKTOP_ICONS",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "bitmap"
+                },
                 {
                     "file": "images/icon.png",
                     "menuIcon": true,
@@ -105,11 +216,12 @@
                     "type": "bitmap"
                 },
                 {
-                    "characterRegex": "[0-9:-]",
+                    "characterRegex": "[0-9-]",
                     "file": "fonts/Microsoft Sans Serif.ttf",
                     "name": "FONT_TEXT_13",
                     "targetPlatforms": [
-                        "basalt"
+                        "basalt",
+                        "diorite"
                     ],
                     "type": "font"
                 },
@@ -118,7 +230,18 @@
                     "file": "fonts/Microsoft Sans Serif.ttf",
                     "name": "FONT_TEXT_15",
                     "targetPlatforms": [
-                        "basalt"
+                        "basalt",
+                        "diorite"
+                    ],
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[APM 0-9:]",
+                    "file": "fonts/Microsoft Sans Serif.ttf",
+                    "name": "FONT_TEXT_23",
+                    "targetPlatforms": [
+                        "basalt",
+                        "diorite"
                     ],
                     "type": "font"
                 }
@@ -126,12 +249,13 @@
         },
         "sdkVersion": "3",
         "targetPlatforms": [
-            "basalt"
+            "basalt",
+            "diorite"
         ],
         "uuid": "3ec6fe76-36cc-4a44-a467-6d76d8a09dd8",
         "watchapp": {
             "watchface": true
         }
     },
-    "version": "1.0.0"
+    "version": "1.2.0"
 }
