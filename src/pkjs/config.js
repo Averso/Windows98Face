@@ -16,7 +16,7 @@ module.exports = [
         "messageKey": "bg_color_bw",
         "label": "Desktop color black/white",
         "defaultValue": false,
-        "capabilities": ["PLATFORM_DIORITE"]
+        "capabilities": ["BW"]
       },
       {
         "type": "toggle",

@@ -27,7 +27,7 @@ void load_default_settings() {
   settings.monochrome_enabled = false;
   #endif
   
-  #ifdef PBL_PLATFORM_DIORITE
+  #ifdef PBL_BW
   settings.bg_color = false;
   #endif
 }
@@ -113,7 +113,7 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
   #endif
   
   
-  #ifdef PBL_PLATFORM_DIORITE
+  #ifdef PBL_BW
   Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_bg_color_bw);
   if(bg_color_t) {
    settings.bg_color = bg_color_t->value->int32 == 1;

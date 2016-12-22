@@ -32,6 +32,7 @@
                     "file": "images/bw-icon.png",
                     "name": "IMAGE_ICON",
                     "targetPlatforms": [
+                        "aplite",
                         "diorite"
                     ],
                     "type": "bitmap"
@@ -40,6 +41,7 @@
                     "file": "images/bw-qt-on.png",
                     "name": "IMAGE_QT_ON_BW",
                     "targetPlatforms": [
+                        "aplite",
                         "basalt",
                         "diorite"
                     ],
@@ -49,6 +51,7 @@
                     "file": "images/bw-qt-off.png",
                     "name": "IMAGE_QT_OFF_BW",
                     "targetPlatforms": [
+                        "aplite",
                         "basalt",
                         "diorite"
                     ],
@@ -58,6 +61,7 @@
                     "file": "images/bw-bt-off.png",
                     "name": "IMAGE_BT_OFF_BW",
                     "targetPlatforms": [
+                        "aplite",
                         "basalt",
                         "diorite"
                     ],
@@ -67,6 +71,7 @@
                     "file": "images/bw-bt-on.png",
                     "name": "IMAGE_BT_ON_BW",
                     "targetPlatforms": [
+                        "aplite",
                         "basalt",
                         "diorite"
                     ],
@@ -76,6 +81,7 @@
                     "file": "images/bw-battery_low.png",
                     "name": "IMAGE_BATTERY_LOW_BW",
                     "targetPlatforms": [
+                        "aplite",
                         "basalt",
                         "diorite"
                     ],
@@ -85,6 +91,7 @@
                     "file": "images/bw-battery_high.png",
                     "name": "IMAGE_BATTERY_HIGH_BW",
                     "targetPlatforms": [
+                        "aplite",
                         "basalt",
                         "diorite"
                     ],
@@ -94,6 +101,7 @@
                     "file": "images/bw-desktop-icons.png",
                     "name": "IMAGE_DESKTOP_ICONS_BW",
                     "targetPlatforms": [
+                        "aplite",
                         "basalt",
                         "diorite"
                     ],
@@ -103,6 +111,7 @@
                     "file": "images/bw-window.png",
                     "name": "IMAGE_WINDOW_BW",
                     "targetPlatforms": [
+                        "aplite",
                         "basalt",
                         "diorite"
                     ],
@@ -112,6 +121,7 @@
                     "file": "images/bw-menubar.png",
                     "name": "IMAGE_MENUBAR_BW",
                     "targetPlatforms": [
+                        "aplite",
                         "basalt",
                         "diorite"
                     ],
@@ -121,6 +131,7 @@
                     "file": "images/desktop-text.png",
                     "name": "IMAGE_DESKTOP_TEXT",
                     "targetPlatforms": [
+                        "aplite",
                         "basalt",
                         "diorite"
                     ],
@@ -168,14 +179,6 @@
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/desktop.png",
-                    "name": "IMAGE_DESKTOP",
-                    "targetPlatforms": [
-                        "basalt"
-                    ],
-                    "type": "bitmap"
-                },
-                {
                     "file": "images/bar.png",
                     "name": "IMAGE_MENUBAR",
                     "targetPlatforms": [
@@ -216,10 +219,11 @@
                     "type": "bitmap"
                 },
                 {
-                    "characterRegex": "[0-9-]",
+                    "characterRegex": "[APM 0-9:]",
                     "file": "fonts/Microsoft Sans Serif.ttf",
-                    "name": "FONT_TEXT_13",
+                    "name": "FONT_TEXT_23",
                     "targetPlatforms": [
+                        "aplite",
                         "basalt",
                         "diorite"
                     ],
@@ -230,16 +234,18 @@
                     "file": "fonts/Microsoft Sans Serif.ttf",
                     "name": "FONT_TEXT_15",
                     "targetPlatforms": [
+                        "aplite",
                         "basalt",
                         "diorite"
                     ],
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[APM 0-9:]",
+                    "characterRegex": "[0-9-]",
                     "file": "fonts/Microsoft Sans Serif.ttf",
-                    "name": "FONT_TEXT_23",
+                    "name": "FONT_TEXT_13",
                     "targetPlatforms": [
+                        "aplite",
                         "basalt",
                         "diorite"
                     ],
@@ -249,6 +255,7 @@
         },
         "sdkVersion": "3",
         "targetPlatforms": [
+            "aplite",
             "basalt",
             "diorite"
         ],

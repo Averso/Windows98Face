@@ -85,7 +85,7 @@ typedef struct ClaySettings {
   GColor text_color;
   bool monochrome_enabled;
   #endif
-  #ifdef PBL_PLATFORM_DIORITE
+  #ifdef PBL_BW
   bool bg_color; //false = black
   #endif
   bool vibe_on_disconnect;

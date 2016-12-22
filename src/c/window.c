@@ -84,7 +84,7 @@ void window_update()
   window_set_background_color(main_window, settings.bg_color); 
   gbitmap_fill_all_except(GColorClear,settings.text_color,false,bitmap_desktop_text,layer_desktop_text);
   
-  #else //diorite
+  #else //diorite/aplite
   if(settings.bg_color) //black desktop
   {
      window_set_background_color(main_window, GColorWhite);
