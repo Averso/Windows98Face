@@ -23,7 +23,9 @@
             "switch_bin_state",
             "date_format",
             "monochrome_enabled",
-            "bg_color_bw"
+            "bg_color_bw",
+            "enable_flick",
+            "flick_show_duration"
         ],
         "projectType": "native",
         "resources": {
@@ -264,5 +266,5 @@
             "watchface": true
         }
     },
-    "version": "1.2.0"
+    "version": "1.5.0"
 }

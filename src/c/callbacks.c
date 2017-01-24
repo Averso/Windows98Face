@@ -1,7 +1,8 @@
 #include <pebble.h>
 #include "globals.h"
 #include "callbacks.h"
-
+#include "window.h"
+#include "time.h"
 static bool is_connected = true; //to vibrate once
 
 //BLUETOOTH
@@ -37,7 +38,7 @@ void bluetooth_callback(bool connected) {
 //BATTERY
 void battery_callback(BatteryChargeState state)
 {
-   if(settings.show_datatime_window)
+   if(settings.show_datatime_window && !settings.flick_enabled)
    {
      if( state.is_charging)
      {
@@ -51,8 +52,7 @@ void battery_callback(BatteryChargeState state)
       text_layer_set_text(layer_menubar_text, s_buffer);    
      }
      
-   }     
-  
+   }
   
   //save battery level
   battery_level = state.charge_percent;
@@ -94,3 +94,34 @@ void battery_update_trashbin()
   layer_mark_dirty(bitmap_layer_get_layer(layer_battery));
 }
 
+
+
+//ACCELEROMETER - FLICK
+void show_battery_menubar()
+{
+  static char s_buffer[5];
+  snprintf(s_buffer, sizeof(s_buffer), "%d%%", battery_level);  
+  text_layer_set_text(layer_menubar_text, s_buffer);     
+}
+
+void accel_tap_handler(AccelAxisType axis, int32_t direction) {
+  
+ 
+  if(settings.flick_enabled)
+  {
+    //show window
+    flick_show_window = true;
+    show_datatime_window(flick_show_window);
+    show_battery_menubar();
+    timer = app_timer_register(settings.flick_show_duration*1000, (AppTimerCallback)timer_callback, NULL); 
+     
+  }
+ 
+
+}
+
+void timer_callback(void *data) {
+    flick_show_window = false;
+	 show_datatime_window(flick_show_window);
+   update_time();
+}

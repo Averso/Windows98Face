@@ -17,7 +17,9 @@ int main(void) {
   deinit();
 }
 
-static void init(void) {  
+static void init(void) {
+  
+  flick_show_window = false;
 
   // load saved settings
   load_settings();
@@ -50,6 +52,11 @@ static void init(void) {
     
   color_desktop_text = GColorWhite;
   
+  // Subscribe to tap events
+  if(settings.flick_enabled)
+    accel_tap_service_subscribe(accel_tap_handler);
+  
+   APP_LOG(APP_LOG_LEVEL_DEBUG, "show_datatime %d, flichs show %d",settings.show_datatime_window,flick_show_window );
   //get time/date/battery for the first time
   update_time();    
   update_date();
@@ -62,6 +69,9 @@ void deinit(void) {
   if (main_window) {
     window_destroy(main_window);
  }
+  if(settings.flick_enabled)  
+   accel_tap_service_unsubscribe();
+
 }
 
 

@@ -21,6 +21,9 @@ void load_default_settings() {
   settings.center_pos = false;
   settings.switch_bin_state = false;
   settings.date_format = false;
+  settings.flick_enabled = false;
+  settings.flick_show_duration = 10;
+  
   #ifdef PBL_COLOR  
   settings.bg_color = GColorTiffanyBlue;
   settings.text_color = GColorWhite;
@@ -91,6 +94,18 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
    settings.date_format = date_format_t->value->int32 == 1;
   }  
   
+  //enable flick
+  Tuple *enable_flick_t = dict_find(iter, MESSAGE_KEY_enable_flick);
+  if(enable_flick_t) {
+   settings.flick_enabled = enable_flick_t->value->int32 == 1;
+  }
+  
+  //show window time duration
+  Tuple *show_duration_t = dict_find(iter, MESSAGE_KEY_flick_show_duration);  
+  if(window_y) {
+    settings.flick_show_duration = atoi(show_duration_t->value->cstring);    
+  }    
+   
   #ifdef PBL_COLOR
    //bg color
   Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_bg_color);
@@ -120,8 +135,26 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
   }  
   #endif
   
+  //manage flick and windows settings
+   
+  //if data time window is disables - disable flick
+  if(!settings.show_datatime_window)
+  {
+    settings.flick_enabled = false;
+  }
+  
+  //if flick is enables - hide window as it will show after flicks
+  if(settings.flick_enabled)
+  {
+    flick_show_window = false;
+  }
+  
+  
   //save loaded settings
   save_settings();
+  
+  
+    
 }
 
 void load_settings() {

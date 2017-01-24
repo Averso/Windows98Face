@@ -37,7 +37,6 @@
 
 #define TIME_BIG_X 33
 #define TIME_BIG_Y 60
-//#define TIME_BIG_W 96
 #define TIME_BIG_W 100
 #define TIME_BIG_H 28
 
@@ -76,7 +75,9 @@ GFont font_menubar, font_date, font_time;
 
 GColor color_desktop_text;
 int battery_level;
+AppTimer *timer;
 
+bool flick_show_window;
 
 
 typedef struct ClaySettings {
@@ -96,6 +97,8 @@ typedef struct ClaySettings {
   bool center_pos;
   bool switch_bin_state;
   bool date_format;
+  bool flick_enabled;
+  char flick_show_duration;
 } ClaySettings;
 
 // An instance of the struct

@@ -111,8 +111,8 @@ void window_update()
     layer_set_frame(text_layer_get_layer(layer_date),
                     GRect(settings.window_x + DATE_X_OFFSET,settings.window_y + DATE_Y_OFFSET,DATE_W,DATE_H));
   }
-  
-  show_datatime_window(settings.show_datatime_window);
+
+  show_datatime_window((settings.show_datatime_window && !settings.flick_enabled));
   
   //check battery - to update menubar text if needed
   update_time();

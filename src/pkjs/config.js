@@ -98,6 +98,34 @@ module.exports = [
       "items": [
       {
         "type": "heading",
+        "defaultValue": "Flick",       
+      },
+      {
+        "type": "toggle",
+        "messageKey": "enable_flick",
+        "label": "Enable flick to show/hide data/time window",
+        "defaultValue": false
+      },
+      {
+        "type": "input",
+        "messageKey": "flick_show_duration",
+        "defaultValue": "10",
+        "description": "Default: 10s. Max: 60s ",
+        "label": "Show duration.",
+        "attributes": {
+        "type": "number",
+        "max":"60",
+        "min":"1"
+        }
+      }
+      
+      ]},
+      
+      {
+      "type": "section",
+      "items": [
+      {
+        "type": "heading",
         "defaultValue": "Others",       
       },
       {

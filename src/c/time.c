@@ -21,8 +21,8 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
 
 void update_all()
 {
-   time_t temp = time(NULL);
-   struct tm *tick_time = localtime(&temp);  
+  time_t temp = time(NULL);
+  struct tm *tick_time = localtime(&temp);  
    
   static char time[9];
   
@@ -33,7 +33,7 @@ void update_all()
   
   static char date[11];
 
-  strftime(date, sizeof(date),settings.date_format ?"%m-%d-%G" : "%d-%m-%G", tick_time);  
+  strftime(date, sizeof(date),settings.date_format ?"%m-%d-%Y" : "%d-%m-%Y", tick_time);  
   text_layer_set_text(layer_date, date);
   
 }
@@ -42,18 +42,16 @@ void update_time()
   time_t temp = time(NULL);
   struct tm *tick_time = localtime(&temp);  
   
-  static char s_buffer[9];
+  static char time[9];
+  static char time_menubar[9];
+  strftime(time, sizeof(time), clock_is_24h_style() ? "%H:%M" : "%I:%M %p", tick_time);    
+  strftime(time_menubar, sizeof(time_menubar), clock_is_24h_style() ? "%H:%M" : "%I:%M", tick_time);    
   
-  //if window - show AM or PM designation
-  if( settings.show_datatime_window)
-    strftime(s_buffer, sizeof(s_buffer), clock_is_24h_style() ? "%H:%M" : "%I:%M %p", tick_time);    
-  else
-    strftime(s_buffer, sizeof(s_buffer), clock_is_24h_style() ? "%H:%M" : "%I:%M", tick_time);    
-  
-  if(settings.show_datatime_window)
-    text_layer_set_text(layer_time, s_buffer);
-  else    
-    text_layer_set_text(layer_menubar_text, s_buffer);
+  //if(settings.show_datatime_window)
+    text_layer_set_text(layer_time, time);
+  //else  
+  if(!flick_show_window)
+    text_layer_set_text(layer_menubar_text, time_menubar);
   
   if(quiet_time_is_active())
   {
@@ -81,7 +79,7 @@ void update_date()
   struct tm *tick_time = localtime(&temp);
   
   static char s_buffer[11];
-  strftime(s_buffer, sizeof(s_buffer), settings.date_format ?"%m-%d-%G" : "%d-%m-%G", tick_time);
+  strftime(s_buffer, sizeof(s_buffer), settings.date_format ?"%m-%d-%Y" : "%d-%m-%Y", tick_time);
   
   text_layer_set_text(layer_date, s_buffer);
 }
