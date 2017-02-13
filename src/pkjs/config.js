@@ -120,7 +120,7 @@ module.exports = [
       }
       
       ]},
-      
+
       {
       "type": "section",
       "items": [
@@ -138,6 +138,35 @@ module.exports = [
       
       ]}
        
+    ]
+  },
+  {
+    "type": "section",
+    "items": [
+      {
+        "type": "heading",
+        "defaultValue": "Weather",
+      },
+      {
+        "type": "toggle",
+        "messageKey": "enable_weather",
+        "label": "Enable weather (replaces BT and QT indicators)",
+        "defaultValue": false
+      },
+      {
+        "type": "input",
+        "messageKey": "weather_api_key",
+        "defaultValue": "1111111111",
+        "description": "Get key at openweathermap.org",
+        "label": "Open Weather Map API Key",
+      },
+      {
+        "type": "toggle",
+        "messageKey": "temperature_format",
+        "label": "Temperature format",
+        "description": "Fahrenheit/Celsius",
+        "defaultValue": false
+      }
     ]
   },
   {

@@ -3,6 +3,7 @@
 #include "globals.h"
 #include "callbacks.h"
 #include "time.h"
+#include "weather.h"
 #include "gbitmap_color_palette_manipulator.h"
 
 void window_load(Window *window)  
@@ -26,6 +27,7 @@ void window_load(Window *window)
 void window_unload(Window *window)
 {
   text_layer_destroy(layer_menubar_text);
+  text_layer_destroy(layer_weather_text);
   text_layer_destroy(layer_time);
   text_layer_destroy(layer_date);
   
@@ -113,10 +115,21 @@ void window_update()
   }
 
   show_datatime_window((settings.show_datatime_window && !settings.flick_enabled));
+
+  //show/hide the weather/bt/qt icons
+  if (settings.weather_enabled) 
+  {
+    enable_weather(true);
+  }
+  else 
+  {
+    enable_weather(false);
+  }
   
   //check battery - to update menubar text if needed
   update_time();
   update_date();
+  update_temperature();
   battery_callback(battery_state_service_peek());
  
   
@@ -191,6 +204,8 @@ void create_text_layers()
   
   layer_menubar_text = text_layer_create(
     GRect(TIME_SMALL_X, TIME_SMALL_Y, TIME_SMALL_W, TIME_SMALL_H));  
+  layer_weather_text = text_layer_create(
+    GRect(WEATHER_X, WEATHER_Y, WEATHER_W, WEATHER_H));  
   layer_time = text_layer_create(
     GRect(TIME_BIG_X, TIME_BIG_Y, TIME_BIG_W, TIME_BIG_H));   
   layer_date = text_layer_create(
@@ -198,6 +213,7 @@ void create_text_layers()
   
   
   set_up_text_layer(layer_menubar_text, GColorClear, GColorBlack, "44:44", font_menubar,GTextAlignmentCenter);
+  set_up_text_layer(layer_weather_text, GColorClear, GColorBlack, "xxx", font_menubar,GTextAlignmentCenter);
   set_up_text_layer(layer_time, GColorClear, GColorBlack, "44:44", font_time,GTextAlignmentCenter);
   set_up_text_layer(layer_date, GColorClear, GColorBlack, "44-44-2044", font_date,GTextAlignmentCenter);
 }
@@ -236,6 +252,7 @@ void add_layers_to_window(Layer *window_layer)
   
   //text
   layer_add_child(window_layer,text_layer_get_layer(layer_menubar_text));  
+  layer_add_child(window_layer,text_layer_get_layer(layer_weather_text));
   layer_add_child(window_layer,text_layer_get_layer(layer_time));
   layer_add_child(window_layer,text_layer_get_layer(layer_date));
 }
