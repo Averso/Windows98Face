@@ -7,6 +7,7 @@
 
 void window_load(Window *window)  
 {
+//    APP_LOG(APP_LOG_LEVEL_DEBUG, "windows load");
   //get window layer and bounds
   Layer *window_layer = window_get_root_layer(window);  
   GRect bounds = layer_get_bounds(window_layer);
@@ -25,6 +26,7 @@ void window_load(Window *window)
 
 void window_unload(Window *window)
 {
+//    APP_LOG(APP_LOG_LEVEL_DEBUG, "window unload");
   text_layer_destroy(layer_menubar_text);
   text_layer_destroy(layer_time);
   text_layer_destroy(layer_date);
@@ -71,7 +73,7 @@ void window_unload(Window *window)
 
 void window_update()
 {
-  
+//    APP_LOG(APP_LOG_LEVEL_DEBUG, "window update");
   //check bt status
   bluetooth_callback(connection_service_peek_pebble_app_connection());   
   
@@ -118,7 +120,10 @@ void window_update()
   update_time();
   update_date();
   battery_callback(battery_state_service_peek());
- 
+  
+  // subscribe to tap events
+  if(settings.flick_enabled)
+    accel_tap_service_subscribe(accel_tap_handler);
   
 }
 

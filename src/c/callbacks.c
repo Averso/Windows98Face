@@ -107,9 +107,11 @@ void show_battery_menubar()
 void accel_tap_handler(AccelAxisType axis, int32_t direction) {
   
  
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "do a flick!");
   if(settings.flick_enabled)
   {
     //show window
+     APP_LOG(APP_LOG_LEVEL_DEBUG, "show window!!");
     flick_show_window = true;
     show_datatime_window(flick_show_window);
     show_battery_menubar();
@@ -121,6 +123,7 @@ void accel_tap_handler(AccelAxisType axis, int32_t direction) {
 }
 
 void timer_callback(void *data) {
+     APP_LOG(APP_LOG_LEVEL_DEBUG, "hide window!!");
     flick_show_window = false;
 	 show_datatime_window(flick_show_window);
    update_time();

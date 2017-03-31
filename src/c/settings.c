@@ -4,15 +4,17 @@
 #include "window.h"
 
 
-void save_settings() {
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "save settings");
+void save_settings() { 
+//    APP_LOG(APP_LOG_LEVEL_DEBUG, "save settings");
   persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));  
-  //refresh window
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "update");
+  
+  //refresh window 
   window_update();
 }
 
 void load_default_settings() {  
+  
+//    APP_LOG(APP_LOG_LEVEL_DEBUG, "load default settings");
   settings.window_x = WINDOW_X;
   settings.window_y = WINDOW_Y;
   settings.battery_warning_level = BETTERY_DEFAULT_LVL;
@@ -36,6 +38,7 @@ void load_default_settings() {
 }
 
 void inbox_received_handler(DictionaryIterator *iter, void *context) {
+//    APP_LOG(APP_LOG_LEVEL_DEBUG, "read settings");
   
   
   //assign the values from settings to struct
@@ -158,6 +161,8 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
 }
 
 void load_settings() {
+  
+//    APP_LOG(APP_LOG_LEVEL_DEBUG, "load settings");
   // Load the default settings
   load_default_settings();
   // Read settings from persistent storage, if they exist

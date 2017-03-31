@@ -47,11 +47,26 @@ void update_time()
   strftime(time, sizeof(time), clock_is_24h_style() ? "%H:%M" : "%I:%M %p", tick_time);    
   strftime(time_menubar, sizeof(time_menubar), clock_is_24h_style() ? "%H:%M" : "%I:%M", tick_time);    
   
-  //if(settings.show_datatime_window)
-    text_layer_set_text(layer_time, time);
-  //else  
-  if(!flick_show_window)
-    text_layer_set_text(layer_menubar_text, time_menubar);
+  //set text in data/time window when enabled and flcik disabled
+  if(settings.show_datatime_window)
+  {  
+    text_layer_set_text(layer_time, time);    
+  }
+  
+
+  if(settings.show_datatime_window && (settings.flick_enabled && !flick_show_window))
+  {  
+    
+         text_layer_set_text(layer_menubar_text, time_menubar);    
+      
+        
+  }
+  else if (!settings.show_datatime_window)
+  {
+        text_layer_set_text(layer_menubar_text, time_menubar);
+  }
+
+
   
   if(quiet_time_is_active())
   {
