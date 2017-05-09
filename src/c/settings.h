@@ -2,7 +2,7 @@
 #include <pebble.h>
 
 // Persistent storage key
-#define SETTINGS_KEY 23
+#define SETTINGS_KEY 72631
 
 
 void inbox_received_handler(DictionaryIterator *iter, void *context);

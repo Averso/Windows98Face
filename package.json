@@ -13,11 +13,8 @@
         "enableMultiJS": true,
         "messageKeys": [
             "bg_color",
-            "window_x",
-            "window_y",
             "battery_warning_level",
             "vibe_disconnect",
-            "center_pos",
             "enable_window",
             "text_color",
             "switch_bin_state",

@@ -73,15 +73,16 @@ void window_unload(Window *window)
 
 void window_update()
 {
-//    APP_LOG(APP_LOG_LEVEL_DEBUG, "window update");
-  //check bt status
-  bluetooth_callback(connection_service_peek_pebble_app_connection());   
-  
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "!!!window update");
   
   //background color   
   #ifdef PBL_COLOR 
   switch_theme(settings.monochrome_enabled);
   
+  //check bt status
+  bluetooth_callback(connection_service_peek_pebble_app_connection());   
+  
+    
   //desktop text color if not monochrome 
   window_set_background_color(main_window, settings.bg_color); 
   gbitmap_fill_all_except(GColorClear,settings.text_color,false,bitmap_desktop_text,layer_desktop_text);
@@ -105,13 +106,13 @@ void window_update()
   if(settings.show_datatime_window)
   {
     layer_set_frame(bitmap_layer_get_layer(layer_window),
-                    GRect(settings.window_x,settings.window_y,WINDOW_W,WINDOW_H));
+                    GRect(WINDOW_X,WINDOW_Y,WINDOW_W,WINDOW_H));
     
     layer_set_frame(text_layer_get_layer(layer_time),
-                    GRect(settings.window_x + TIME_BIG_X_OFFSET,settings.window_y + TIME_BIG_Y_OFFSET,TIME_BIG_W,TIME_BIG_H));
+                    GRect(WINDOW_X + TIME_BIG_X_OFFSET,WINDOW_Y + TIME_BIG_Y_OFFSET,TIME_BIG_W,TIME_BIG_H));
     
     layer_set_frame(text_layer_get_layer(layer_date),
-                    GRect(settings.window_x + DATE_X_OFFSET,settings.window_y + DATE_Y_OFFSET,DATE_W,DATE_H));
+                    GRect(WINDOW_X + DATE_X_OFFSET,WINDOW_Y + DATE_Y_OFFSET,DATE_W,DATE_H));
   }
 
   show_datatime_window((settings.show_datatime_window && !settings.flick_enabled));
@@ -162,6 +163,8 @@ void load_resources()
 
 void create_bitmap_layers(GRect bounds)
 {   
+  
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "!!!window update");
   layer_desktop_icons = bitmap_layer_create(bounds);   
   layer_desktop_text = bitmap_layer_create(bounds);  
   layer_menubar = bitmap_layer_create(GRect(MENUBAR_X,MENUBAR_Y,MENUBAR_W,MENUBAR_H));
@@ -175,8 +178,9 @@ void create_bitmap_layers(GRect bounds)
   #ifdef PBL_COLOR
   bitmap_layer_set_bitmap(layer_desktop_icons,bitmap_desktop_icons);   
   bitmap_layer_set_bitmap(layer_menubar,bitmap_menubar);  
-  bitmap_layer_set_bitmap(layer_window,bitmap_window);   
-  bitmap_layer_set_bitmap(layer_bt,bitmap_bt_on); 
+  bitmap_layer_set_bitmap(layer_window,bitmap_window);  
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "!!!ustwa na on w create");
+  bitmap_layer_set_bitmap(layer_bt,bitmap_bt_off); 
   bitmap_layer_set_bitmap(layer_qt,bitmap_qt_off); 
   bitmap_layer_set_bitmap(layer_battery,bitmap_battery_high);  
   #else

@@ -52,10 +52,7 @@
 #define DATE_Y_OFFSET 96
 
 #define BETTERY_DEFAULT_LVL 40
-#define CONNECTED_KEY 12
-
-#define WINDOW_CENTER_X 12
-#define WINDOW_CENTER_Y 8
+#define CONNECTED_KEY 2623
 
 Window *main_window;                                  
 
@@ -91,10 +88,7 @@ typedef struct ClaySettings {
   #endif
   bool vibe_on_disconnect;
   int battery_warning_level;
-  char window_x;
-  char window_y;
   bool show_datatime_window;
-  bool center_pos;
   bool switch_bin_state;
   bool date_format;
   bool flick_enabled;

@@ -18,7 +18,7 @@ int main(void) {
 }
 
 static void init(void) {
-//   APP_LOG(APP_LOG_LEVEL_DEBUG, "init");
+   APP_LOG(APP_LOG_LEVEL_DEBUG, "init");
   
   //set varaibles
   flick_show_window = false;

@@ -15,12 +15,9 @@ void save_settings() {
 void load_default_settings() {  
   
 //    APP_LOG(APP_LOG_LEVEL_DEBUG, "load default settings");
-  settings.window_x = WINDOW_X;
-  settings.window_y = WINDOW_Y;
   settings.battery_warning_level = BETTERY_DEFAULT_LVL;
-  settings.vibe_on_disconnect = false;  
+  settings.vibe_on_disconnect = true;  
   settings.show_datatime_window = false;
-  settings.center_pos = false;
   settings.switch_bin_state = false;
   settings.date_format = false;
   settings.flick_enabled = false;
@@ -60,37 +57,13 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
    settings.switch_bin_state = switch_bin_t->value->int32 == 1;
   }  
   
-   //window x 
-  Tuple *window_x = dict_find(iter, MESSAGE_KEY_window_x);  
-  if(window_x) {
-    settings.window_x = atoi(window_x->value->cstring);    
-  }      
-  
-   //window y  
-  Tuple *window_y = dict_find(iter, MESSAGE_KEY_window_y);  
-  if(window_y) {
-    settings.window_y = atoi(window_y->value->cstring);    
-  }    
-  
   //data time window
   Tuple *window_enabled = dict_find(iter, MESSAGE_KEY_enable_window);
   if(window_enabled) {
    settings.show_datatime_window = window_enabled->value->int32 == 1;
   }  
   
-  //datatime window center
-  Tuple *center_pos = dict_find(iter, MESSAGE_KEY_center_pos);
-  if(center_pos) {
-   settings.center_pos = center_pos->value->int32 == 1;
-  }  
-  
-  //if center - change x,y coords
-  if(settings.center_pos)
-  {
-    settings.window_x = WINDOW_CENTER_X;
-    settings.window_y = WINDOW_CENTER_Y;
-  }
-  
+   
   //date format
   Tuple *date_format_t = dict_find(iter, MESSAGE_KEY_date_format);
   if(date_format_t) {
@@ -105,7 +78,7 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
   
   //show window time duration
   Tuple *show_duration_t = dict_find(iter, MESSAGE_KEY_flick_show_duration);  
-  if(window_y) {
+  if(show_duration_t) {
     settings.flick_show_duration = atoi(show_duration_t->value->cstring);    
   }    
    

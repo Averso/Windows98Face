@@ -54,45 +54,7 @@ module.exports = [
         "messageKey": "enable_window",
         "label": "Enable data/time window",
         "defaultValue": false
-      },
-      {
-      "type": "section",
-      "items": [
-      {
-        "type": "heading",
-        "defaultValue": "Position",       
-      },
-      {
-        "type": "toggle",
-        "messageKey": "center_pos",
-        "label": "Center window",
-        "defaultValue": false
-      },
-      {
-        "type": "input",
-        "messageKey": "window_x",
-        "defaultValue": "19",
-        "description": "Default: 19. Max: 24.",
-        "label": "X position",
-        "attributes": {
-        "type": "number",
-        "max":"24",
-        "min":"0"
-      }
-      },
-      {
-        "type": "input",
-        "messageKey": "window_y",
-        "defaultValue": "9",
-        "description": "Default: 9. Max: 16.",
-        "label": "Y position",
-        "attributes": {
-        "type": "number",
-        "max":"16",
-        "min":"0"
-        }
-      }  
-      ]},
+      },      
       {
       "type": "section",
       "items": [
@@ -169,7 +131,7 @@ module.exports = [
         "type": "toggle",
         "messageKey": "vibe_disconnect",
         "label": "Vibrate on disconnect",
-        "defaultValue": false
+        "defaultValue": true
       }
     ]
   },

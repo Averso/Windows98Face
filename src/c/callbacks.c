@@ -13,6 +13,7 @@ void bluetooth_callback(bool connected) {
      is_connected = persist_read_bool(CONNECTED_KEY);
   }
   
+   APP_LOG(APP_LOG_LEVEL_DEBUG, "bt callback");
   //show/hide bluetooth icon depending on connection
   #ifdef PBL_COLOR
   if(settings.monochrome_enabled)
