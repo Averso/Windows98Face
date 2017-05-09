@@ -3,6 +3,7 @@ module.exports = function() {
   var windowToggle;
   var centerPosToggle;
   var flickToHide;
+  var weatherToggle;
   
    function toggleXYPosition()
   { 
@@ -23,7 +24,7 @@ module.exports = function() {
       clayConfig.getItemByMessageKey('flick_show_duration').disable();
     }
   }
-  
+
   function togglePosition()
   { 
    if (this.get()) {
@@ -43,6 +44,17 @@ module.exports = function() {
     }
   }
   
+  function toggleWeather()
+  {
+    if (this.get()) {
+       clayConfig.getItemByMessageKey('temperature_format').enable();
+       clayConfig.getItemByMessageKey('weather_api_key').enable();
+    }
+    else {
+       clayConfig.getItemByMessageKey('temperature_format').disable();
+       clayConfig.getItemByMessageKey('weather_api_key').disable();
+    }
+  }
   
   
   
@@ -66,6 +78,10 @@ module.exports = function() {
     togglePosition.call(windowToggle);
     windowToggle.on('change', togglePosition);
     
+    //if weather is disabled - disable all related settings
+    weatherToggle = clayConfig.getItemByMessageKey('enable_weather');
+    toggleWeather.call(weatherToggle);
+    weatherToggle.on('change', toggleWeather);
    
   });
   

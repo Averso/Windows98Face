@@ -25,7 +25,11 @@
             "monochrome_enabled",
             "bg_color_bw",
             "enable_flick",
-            "flick_show_duration"
+            "flick_show_duration",
+            "enable_weather",
+            "temperature",
+            "temperature_format",
+            "weather_api_key"
         ],
         "projectType": "native",
         "resources": {

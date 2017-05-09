@@ -25,6 +25,9 @@ void load_default_settings() {
   settings.date_format = false;
   settings.flick_enabled = false;
   settings.flick_show_duration = 10;
+  settings.weather_enabled = false;
+  settings.temperature_format = false;
+  settings.weather_api_key = "1111111111";
   
   #ifdef PBL_COLOR  
   settings.bg_color = GColorTiffanyBlue;
@@ -107,6 +110,28 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
   Tuple *show_duration_t = dict_find(iter, MESSAGE_KEY_flick_show_duration);  
   if(window_y) {
     settings.flick_show_duration = atoi(show_duration_t->value->cstring);    
+  }
+
+  //enable weather
+  Tuple *enable_weather_t = dict_find(iter, MESSAGE_KEY_enable_weather);
+  if (enable_weather_t) {
+    settings.weather_enabled = enable_weather_t->value->int32 == 1;
+  }
+
+  //get the temperature
+  Tuple *temperature_t = dict_find(iter, MESSAGE_KEY_temperature);
+  temperature = (int)temperature_t->value->int32;
+
+  //toggle between faherenheit and celsius
+  Tuple *temperature_format_t = dict_find(iter, MESSAGE_KEY_temperature_format);
+  if (temperature_format_t) {
+    settings.temperature_format = temperature_format_t->value->int32 == 1;
+  }
+
+  //get weather api key
+  Tuple *weather_api_key_t = dict_find(iter, MESSAGE_KEY_weather_api_key);  
+  if(weather_api_key_t) {
+    settings.weather_api_key = weather_api_key_t->value->cstring;    
   }    
    
   #ifdef PBL_COLOR

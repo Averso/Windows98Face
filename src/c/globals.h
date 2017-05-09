@@ -30,6 +30,11 @@
 #define BATTERY_W 32
 #define BATTERY_H 32
 
+#define WEATHER_X 65
+#define WEATHER_Y 145
+#define WEATHER_W 32
+#define WEATHER_H 20
+
 #define TIME_SMALL_X 101
 #define TIME_SMALL_Y 145
 #define TIME_SMALL_W 38
@@ -59,7 +64,7 @@
 
 Window *main_window;                                  
 
-TextLayer *layer_menubar_text, *layer_time, *layer_date;
+TextLayer *layer_menubar_text, *layer_weather_text, *layer_time, *layer_date;
 
 
 BitmapLayer *layer_desktop_icons,*layer_desktop_text, *layer_menubar,*layer_window,*layer_bt, *layer_qt, *layer_battery;                          
@@ -74,7 +79,7 @@ GBitmap *bitmap_desktop_text,*bitmap_desktop_icons_bw, *bitmap_menubar_bw,*bitma
 GFont font_menubar, font_date, font_time;
 
 GColor color_desktop_text;
-int battery_level;
+int battery_level, temperature;
 AppTimer *timer;
 
 bool flick_show_window;
@@ -99,6 +104,9 @@ typedef struct ClaySettings {
   bool date_format;
   bool flick_enabled;
   char flick_show_duration;
+  bool weather_enabled;
+  bool temperature_format;
+  char* weather_api_key;
 } ClaySettings;
 
 // An instance of the struct
