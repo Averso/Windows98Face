@@ -22,232 +22,130 @@
             "monochrome_enabled",
             "bg_color_bw",
             "enable_flick",
-            "flick_show_duration"
+            "flick_show_duration",
+            "battery_mode",
+            "switch_bin_text"
         ],
         "projectType": "native",
         "resources": {
             "media": [
                 {
-                    "file": "images/bw-icon.png",
-                    "name": "IMAGE_ICON",
-                    "targetPlatforms": [
-                        "aplite",
-                        "diorite"
-                    ],
+                    "file": "images/bt-on.png",
+                    "name": "IMAGE_BT_ON",
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/bw-qt-on.png",
-                    "name": "IMAGE_QT_ON_BW",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt",
-                        "diorite"
-                    ],
+                    "file": "images/bt-off.png",
+                    "name": "IMAGE_BT_OFF",
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/bw-qt-off.png",
-                    "name": "IMAGE_QT_OFF_BW",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt",
-                        "diorite"
-                    ],
+                    "file": "images/battery_10.png",
+                    "name": "IMAGE_BATTERY_10",
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/bw-bt-off.png",
-                    "name": "IMAGE_BT_OFF_BW",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt",
-                        "diorite"
-                    ],
+                    "file": "images/battery_25.png",
+                    "name": "IMAGE_BATTERY_25",
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/bw-bt-on.png",
-                    "name": "IMAGE_BT_ON_BW",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt",
-                        "diorite"
-                    ],
+                    "file": "images/battery_50.png",
+                    "name": "IMAGE_BATTERY_50",
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/bw-battery_low.png",
-                    "name": "IMAGE_BATTERY_LOW_BW",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt",
-                        "diorite"
-                    ],
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/bw-battery_high.png",
-                    "name": "IMAGE_BATTERY_HIGH_BW",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt",
-                        "diorite"
-                    ],
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/bw-desktop-icons.png",
-                    "name": "IMAGE_DESKTOP_ICONS_BW",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt",
-                        "diorite"
-                    ],
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/bw-window.png",
-                    "name": "IMAGE_WINDOW_BW",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt",
-                        "diorite"
-                    ],
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/bw-menubar.png",
-                    "name": "IMAGE_MENUBAR_BW",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt",
-                        "diorite"
-                    ],
+                    "file": "images/battery_100.png",
+                    "name": "IMAGE_BATTERY_100",
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
                     "file": "images/desktop-text.png",
                     "name": "IMAGE_DESKTOP_TEXT",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt",
-                        "diorite"
-                    ],
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
                     "file": "images/desktop-icons.png",
                     "name": "IMAGE_DESKTOP_ICONS",
-                    "targetPlatforms": [
-                        "basalt"
-                    ],
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
                     "file": "images/icon.png",
                     "menuIcon": true,
                     "name": "IMAGE_ICON",
-                    "targetPlatforms": [
-                        "basalt"
-                    ],
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/bt-off.png",
-                    "name": "IMAGE_BT_OFF",
-                    "targetPlatforms": [
-                        "basalt"
-                    ],
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/bt-on.png",
-                    "name": "IMAGE_BT_ON",
-                    "targetPlatforms": [
-                        "basalt"
-                    ],
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
                     "file": "images/window.png",
                     "name": "IMAGE_WINDOW",
-                    "targetPlatforms": [
-                        "basalt"
-                    ],
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
                     "file": "images/bar.png",
                     "name": "IMAGE_MENUBAR",
-                    "targetPlatforms": [
-                        "basalt"
-                    ],
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
                     "file": "images/qt-off.png",
                     "name": "IMAGE_QT_OFF",
-                    "targetPlatforms": [
-                        "basalt"
-                    ],
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
                     "file": "images/qt-on.png",
                     "name": "IMAGE_QT_ON",
-                    "targetPlatforms": [
-                        "basalt"
-                    ],
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
                     "file": "images/battery_low.png",
                     "name": "IMAGE_BATTERY_LOW",
-                    "targetPlatforms": [
-                        "basalt"
-                    ],
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
                     "file": "images/battery_high.png",
                     "name": "IMAGE_BATTERY_HIGH",
-                    "targetPlatforms": [
-                        "basalt"
-                    ],
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
-                    "characterRegex": "[APM 0-9:]",
+                    "characterRegex": "[0-9-]",
                     "file": "fonts/Microsoft Sans Serif.ttf",
-                    "name": "FONT_TEXT_23",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt",
-                        "diorite"
-                    ],
-                    "type": "font"
-                },
-                {
-                    "characterRegex": "[Chrg0-9:%]",
-                    "file": "fonts/Microsoft Sans Serif.ttf",
-                    "name": "FONT_TEXT_15",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt",
-                        "diorite"
-                    ],
+                    "name": "FONT_TEXT_7",
+                    "targetPlatforms": null,
                     "type": "font"
                 },
                 {
                     "characterRegex": "[0-9-]",
                     "file": "fonts/Microsoft Sans Serif.ttf",
                     "name": "FONT_TEXT_13",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt",
-                        "diorite"
-                    ],
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[Chrg0-9:%]",
+                    "file": "fonts/Microsoft Sans Serif.ttf",
+                    "name": "FONT_TEXT_15",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[APM 0-9:]",
+                    "file": "fonts/Microsoft Sans Serif.ttf",
+                    "name": "FONT_TEXT_23",
+                    "targetPlatforms": null,
                     "type": "font"
                 }
             ]
@@ -263,5 +161,5 @@
             "watchface": true
         }
     },
-    "version": "1.6.0"
+    "version": "1.7.0"
 }

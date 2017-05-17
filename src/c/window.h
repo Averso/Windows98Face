@@ -14,6 +14,3 @@ const char * text,GFont font,GTextAlignment alignment); //set up text layer with
 void create_text_layers();
 void bitmap_layers_turn_on_transparency();
 void show_datatime_window(bool hide);
-#ifdef PBL_COLOR
-void switch_theme(bool monochrome);
-#endif

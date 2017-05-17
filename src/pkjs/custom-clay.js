@@ -2,7 +2,7 @@ module.exports = function() {
   var clayConfig = this;
   var windowToggle;
   var flickToHide;
-  
+  var batteryModeToggle;
  
   function toggleShowDuration()
   {
@@ -27,7 +27,19 @@ module.exports = function() {
     }
   }
   
-  
+  function toggleRBinSettings()
+  {
+    if(this.get())
+    {
+      clayConfig.getItemByMessageKey('switch_bin_state').disable();
+      clayConfig.getItemByMessageKey('battery_warning_level').disable();
+    }
+    else 
+    {
+      clayConfig.getItemByMessageKey('switch_bin_state').enable();
+      clayConfig.getItemByMessageKey('battery_warning_level').enable();
+    }
+  }
   
   
  
@@ -46,6 +58,10 @@ module.exports = function() {
     toggleDTWindowOptions.call(windowToggle);
     windowToggle.on('change', toggleDTWindowOptions);
     
+    //if battery mode is enabled (in battery icon mode), disable recycle bin settings
+    batteryModeToggle = clayConfig.getItemByMessageKey('battery_mode');
+    toggleRBinSettings.call(batteryModeToggle);
+    batteryModeToggle.on('change',toggleRBinSettings);
    
   });
   

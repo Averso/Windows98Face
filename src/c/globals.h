@@ -10,7 +10,12 @@
 #define DESKTOP_X 0
 #define DESKTOP_Y 0
 #define DESKTOP_W 144
-#define DESKTOP_H 168
+#define DESKTOP_H 51
+
+#define DSKTOP_TEXT_X 0
+#define DSKTOP_TEXT_Y 108
+#define DSKTOP_TEXT_W 77
+#define DSKTOP_TEXT_H 11  
 
 #define WINDOW_X 19
 #define WINDOW_Y 9
@@ -29,6 +34,12 @@
 #define BATTERY_Y 70
 #define BATTERY_W 32
 #define BATTERY_H 32
+
+#define BATTERY_TEXT_X 0
+#define BATTERY_TEXT_Y 108
+#define BATTERY_TEXT_W 77
+#define BATTERY_TEXT_H 11
+
 
 #define TIME_SMALL_X 101
 #define TIME_SMALL_Y 145
@@ -51,24 +62,26 @@
 #define DATE_X_OFFSET 10
 #define DATE_Y_OFFSET 96
 
+#define BATTERY_LVLS 4
+
 #define BETTERY_DEFAULT_LVL 40
+
+// Persistent storage key for connection status
 #define CONNECTED_KEY 2623
+
+// Persistent storage key for settings
+#define SETTINGS_KEY 72631
 
 Window *main_window;                                  
 
-TextLayer *layer_menubar_text, *layer_time, *layer_date;
-
+TextLayer *layer_menubar_text, *layer_time, *layer_date, *layer_battery_text, *layer_weather_text;
 
 BitmapLayer *layer_desktop_icons,*layer_desktop_text, *layer_menubar,*layer_window,*layer_bt, *layer_qt, *layer_battery;                          
-#ifdef PBL_COLOR
-GBitmap *bitmap_desktop_icons, *bitmap_menubar,*bitmap_window,*bitmap_bt_on,*bitmap_bt_off,
-        *bitmap_qt_on,*bitmap_qt_off,*bitmap_battery_high, *bitmap_battery_low;                        
-#endif
 
-GBitmap *bitmap_desktop_text,*bitmap_desktop_icons_bw, *bitmap_menubar_bw,*bitmap_window_bw,*bitmap_bt_on_bw,*bitmap_bt_off_bw,
-        *bitmap_qt_on_bw,*bitmap_qt_off_bw,*bitmap_battery_high_bw, *bitmap_battery_low_bw;   
+GBitmap *bitmap_desktop_text, *bitmap_desktop_icons, *bitmap_menubar,*bitmap_window,*bitmap_bt_on,*bitmap_bt_off,
+        *bitmap_qt_on,*bitmap_qt_off,*bitmap_battery_high, *bitmap_battery_low, *bitmap_battery_icon[4];                        
 
-GFont font_menubar, font_date, font_time;
+GFont font_menubar, font_date, font_time, font_battery;
 
 GColor color_desktop_text;
 int battery_level;
@@ -81,7 +94,6 @@ typedef struct ClaySettings {
   #ifdef PBL_COLOR
   GColor bg_color;
   GColor text_color;
-  bool monochrome_enabled;
   #endif
   #ifdef PBL_BW
   bool bg_color; //false = black
@@ -93,6 +105,8 @@ typedef struct ClaySettings {
   bool date_format;
   bool flick_enabled;
   char flick_show_duration;
+  bool battery_mode; //false = Recycle Bin
+  bool battery_text; //false = 'Recycle Bin' text
 } ClaySettings;
 
 // An instance of the struct

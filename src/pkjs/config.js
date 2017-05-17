@@ -17,15 +17,7 @@ module.exports = [
         "label": "Desktop color black/white",
         "defaultValue": false,
         "capabilities": ["BW"]
-      },
-      {
-        "type": "toggle",
-        "messageKey": "monochrome_enabled",
-        "label": "Monochrome",
-        "description": "Turns on monochrome theme. You can still change background and text color.",
-        "defaultValue": false,
-        "capabilities": ["COLOR"]
-      },
+      },      
       {
         "type": "color",
         "messageKey": "bg_color",
@@ -79,27 +71,75 @@ module.exports = [
         "max":"60",
         "min":"1"
         }
-      }
-      
+      }      
       ]},
-      
       {
-      "type": "section",
-      "items": [
+        "type": "section",
+        "items": [
+        {
+          "type": "heading",
+          "defaultValue": "Others"
+        },      
+        {
+           "type": "toggle",
+           "messageKey": "date_format",
+           "label": "Date format",
+           "description": "dd-mm-yyyy/mm-dd-yyyy",
+           "defaultValue": false
+        }
+        ]
+      }      
+            
+    ]
+  },
+  {
+    "type":"section",
+    "items": [
       {
-        "type": "heading",
-        "defaultValue": "Others",       
+        "type":"heading",
+        "defaultValue":"Battery"
       },
       {
         "type": "toggle",
-        "messageKey": "date_format",
-        "label": "Date format",
-        "description": "dd-mm-yyyy/mm-dd-yyyy",
+        "messageKey": "battery_mode",
+        "label": "Battery mode",
+        "description": "Recycle Bin/Battery Icon",
         "defaultValue": false
-      }   
-      
-      ]}
-       
+      },     
+      {
+        "type": "section",
+        "items": [
+          {
+          "type": "heading",
+          "defaultValue": "Recycle Bin",       
+          },
+          {
+          "type": "toggle",
+          "messageKey": "switch_bin_state",
+          "label": "Switch bin states",
+          "description": "Switch default low battery warning states for recycle bin. Set: low = empty; Unset: low = full.",
+          "defaultValue": false
+         },
+         {
+          "type": "input",
+          "messageKey": "battery_warning_level",
+          "defaultValue": "40",
+          "label": "Baterry warning level",
+          "attributes": {
+          "type": "number",
+          "max":"100",
+          "min":"1"
+          }
+        },
+        {
+          "type": "toggle",
+          "messageKey": "switch_bin_text",
+          "label": "Label",
+          "description": "Show 'Recycle Bin' text/battery status.",
+          "defaultValue": false
+        }        
+        ]
+      }             
     ]
   },
   {
@@ -108,25 +148,7 @@ module.exports = [
       {
       "type": "heading",
       "defaultValue": "Others"
-      },
-      {
-        "type": "toggle",
-        "messageKey": "switch_bin_state",
-        "label": "Switch bin states",
-        "description": "Switch default low battery warning states for recycle bin. Set: low = empty; Unset: low = full.",
-        "defaultValue": false
-      },
-      {
-        "type": "input",
-        "messageKey": "battery_warning_level",
-        "defaultValue": "40",
-        "label": "Baterry warning level",
-        "attributes": {
-        "type": "number",
-        "max":"100",
-        "min":"1"
-        }
-      },
+      },               
       {
         "type": "toggle",
         "messageKey": "vibe_disconnect",

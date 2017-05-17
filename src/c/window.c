@@ -7,7 +7,6 @@
 
 void window_load(Window *window)  
 {
-//    APP_LOG(APP_LOG_LEVEL_DEBUG, "windows load");
   //get window layer and bounds
   Layer *window_layer = window_get_root_layer(window);  
   GRect bounds = layer_get_bounds(window_layer);
@@ -30,11 +29,12 @@ void window_unload(Window *window)
   text_layer_destroy(layer_menubar_text);
   text_layer_destroy(layer_time);
   text_layer_destroy(layer_date);
+  text_layer_destroy(layer_battery_text);
   
   //destroy bitmaps
   gbitmap_destroy(bitmap_desktop_text);
   
-  #ifdef PBL_COLOR  
+
   gbitmap_destroy(bitmap_desktop_icons);
   gbitmap_destroy(bitmap_menubar);
   gbitmap_destroy(bitmap_window);
@@ -44,17 +44,11 @@ void window_unload(Window *window)
   gbitmap_destroy(bitmap_qt_off);
   gbitmap_destroy(bitmap_battery_high);
   gbitmap_destroy(bitmap_battery_low);
-  #endif
   
-  gbitmap_destroy(bitmap_desktop_icons_bw);
-  gbitmap_destroy(bitmap_menubar_bw);
-  gbitmap_destroy(bitmap_window_bw);
-  gbitmap_destroy(bitmap_bt_on_bw);
-  gbitmap_destroy(bitmap_bt_off_bw);
-  gbitmap_destroy(bitmap_qt_on_bw);
-  gbitmap_destroy(bitmap_qt_off_bw);
-  gbitmap_destroy(bitmap_battery_high_bw);
-  gbitmap_destroy(bitmap_battery_low_bw);
+  for(int i=0; i<BATTERY_LVLS;i++)  
+    gbitmap_destroy(bitmap_battery_icon[i]);     
+  
+  
             
   bitmap_layer_destroy(layer_desktop_text);
   bitmap_layer_destroy(layer_desktop_icons);
@@ -68,35 +62,33 @@ void window_unload(Window *window)
   fonts_unload_custom_font(font_menubar);
   fonts_unload_custom_font(font_time);
   fonts_unload_custom_font(font_date);
+  fonts_unload_custom_font(font_battery);
  
 }
 
 void window_update()
 {
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "!!!window update");
+  //check bt status
+  bluetooth_callback(connection_service_peek_pebble_app_connection());     
   
   //background color   
   #ifdef PBL_COLOR 
-  switch_theme(settings.monochrome_enabled);
-  
-  //check bt status
-  bluetooth_callback(connection_service_peek_pebble_app_connection());   
-  
-    
-  //desktop text color if not monochrome 
+ 
   window_set_background_color(main_window, settings.bg_color); 
   gbitmap_fill_all_except(GColorClear,settings.text_color,false,bitmap_desktop_text,layer_desktop_text);
   
   #else //diorite/aplite
   if(settings.bg_color) //black desktop
   {
-     window_set_background_color(main_window, GColorWhite);
-     gbitmap_fill_all_except(GColorClear,GColorBlack,false,bitmap_desktop_text,layer_desktop_text);     
+    window_set_background_color(main_window, GColorWhite);
+    //change text color
+    gbitmap_fill_all_except(GColorClear,GColorBlack,false,bitmap_desktop_text,layer_desktop_text);     
   }
   else //white
   {
-     window_set_background_color(main_window, GColorBlack);
-     gbitmap_fill_all_except(GColorClear,GColorWhite,false,bitmap_desktop_text,layer_desktop_text);
+    window_set_background_color(main_window, GColorBlack);
+    //change text color
+    gbitmap_fill_all_except(GColorClear,GColorWhite,false,bitmap_desktop_text,layer_desktop_text);
   }    
   #endif
   
@@ -117,9 +109,20 @@ void window_update()
 
   show_datatime_window((settings.show_datatime_window && !settings.flick_enabled));
   
-  //check battery - to update menubar text if needed
+  //show recycle bin/battery
+  if(settings.battery_mode)
+  {
+    
+  }
+  else
+  {
+    
+  }
+  
   update_time();
   update_date();
+  
+  //check battery - to update menubar text if needed  
   battery_callback(battery_state_service_peek());
   
   // subscribe to tap events
@@ -135,10 +138,10 @@ void load_resources()
   font_menubar = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_15));
   font_date = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_13));  
   font_time = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_23));
+  font_battery = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_23));
   
   //BITMAPS - color
   bitmap_desktop_text = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_DESKTOP_TEXT);
-  #ifdef PBL_COLOR
   bitmap_desktop_icons = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_DESKTOP_ICONS);  
   bitmap_menubar = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_MENUBAR);
   bitmap_window = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_WINDOW);
@@ -148,25 +151,21 @@ void load_resources()
   bitmap_qt_off = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_QT_OFF);
   bitmap_battery_high = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_HIGH);
   bitmap_battery_low = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_LOW);
-  #endif
-  bitmap_desktop_icons_bw = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_DESKTOP_ICONS_BW);
-  bitmap_menubar_bw = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_MENUBAR_BW);
-  bitmap_window_bw = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_WINDOW_BW);
-  bitmap_bt_on_bw = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BT_ON_BW);
-  bitmap_bt_off_bw = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BT_OFF_BW);
-  bitmap_qt_on_bw = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_QT_ON_BW);
-  bitmap_qt_off_bw = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_QT_OFF_BW);
-  bitmap_battery_high_bw = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_HIGH_BW);
-  bitmap_battery_low_bw = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_LOW_BW);
+  bitmap_battery_icon[0] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_100);
+  bitmap_battery_icon[1] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_50);
+  bitmap_battery_icon[2] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_25);
+  bitmap_battery_icon[3] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_10);
+
+  
+
   
 }
 
 void create_bitmap_layers(GRect bounds)
 {   
-  
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "!!!window update");
-  layer_desktop_icons = bitmap_layer_create(bounds);   
-  layer_desktop_text = bitmap_layer_create(bounds);  
+    
+  layer_desktop_icons = bitmap_layer_create(bounds);  
+  layer_desktop_text = bitmap_layer_create(GRect(DSKTOP_TEXT_X,DSKTOP_TEXT_Y,DSKTOP_TEXT_W,DSKTOP_TEXT_H));  
   layer_menubar = bitmap_layer_create(GRect(MENUBAR_X,MENUBAR_Y,MENUBAR_W,MENUBAR_H));
   layer_window = bitmap_layer_create(GRect(WINDOW_X,WINDOW_Y,WINDOW_W,WINDOW_H));
   layer_bt = bitmap_layer_create(GRect(BT_X,ICON_Y,ICON_W,ICON_H));
@@ -174,41 +173,31 @@ void create_bitmap_layers(GRect bounds)
   layer_battery = bitmap_layer_create(GRect(BATTERY_X,BATTERY_Y,BATTERY_W,BATTERY_H));
   
   bitmap_layer_set_bitmap(layer_desktop_text,bitmap_desktop_text);   
-  
-  #ifdef PBL_COLOR
+   
   bitmap_layer_set_bitmap(layer_desktop_icons,bitmap_desktop_icons);   
   bitmap_layer_set_bitmap(layer_menubar,bitmap_menubar);  
   bitmap_layer_set_bitmap(layer_window,bitmap_window);  
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "!!!ustwa na on w create");
   bitmap_layer_set_bitmap(layer_bt,bitmap_bt_off); 
   bitmap_layer_set_bitmap(layer_qt,bitmap_qt_off); 
   bitmap_layer_set_bitmap(layer_battery,bitmap_battery_high);  
-  #else
-  bitmap_layer_set_bitmap(layer_desktop_icons,bitmap_desktop_icons_bw);   
-  bitmap_layer_set_bitmap(layer_menubar,bitmap_menubar_bw);  
-  bitmap_layer_set_bitmap(layer_window,bitmap_window_bw);   
-  bitmap_layer_set_bitmap(layer_bt,bitmap_bt_on_bw); 
-  bitmap_layer_set_bitmap(layer_qt,bitmap_qt_off_bw); 
-  bitmap_layer_set_bitmap(layer_battery,bitmap_battery_high_bw);  
-  #endif  
-  
-  
+    
 }
 
 void create_text_layers()
-{
-  
+{  
   layer_menubar_text = text_layer_create(
     GRect(TIME_SMALL_X, TIME_SMALL_Y, TIME_SMALL_W, TIME_SMALL_H));  
   layer_time = text_layer_create(
     GRect(TIME_BIG_X, TIME_BIG_Y, TIME_BIG_W, TIME_BIG_H));   
   layer_date = text_layer_create(
     GRect(DATE_X, DATE_Y,DATE_W, DATE_H));
-  
+  layer_battery_text = text_layer_create(
+    GRect(BATTERY_TEXT_X, BATTERY_TEXT_Y,BATTERY_TEXT_W, BATTERY_TEXT_H));
   
   set_up_text_layer(layer_menubar_text, GColorClear, GColorBlack, "44:44", font_menubar,GTextAlignmentCenter);
   set_up_text_layer(layer_time, GColorClear, GColorBlack, "44:44", font_time,GTextAlignmentCenter);
   set_up_text_layer(layer_date, GColorClear, GColorBlack, "44-44-2044", font_date,GTextAlignmentCenter);
+  set_up_text_layer(layer_battery_text, GColorClear, GColorRed, "Recycle Bin", font_date,GTextAlignmentCenter);
 }
 
 void set_up_text_layer(TextLayer *layer, GColor background, GColor text_color, const char * text,GFont font,GTextAlignment alignment)
@@ -247,6 +236,7 @@ void add_layers_to_window(Layer *window_layer)
   layer_add_child(window_layer,text_layer_get_layer(layer_menubar_text));  
   layer_add_child(window_layer,text_layer_get_layer(layer_time));
   layer_add_child(window_layer,text_layer_get_layer(layer_date));
+  layer_add_child(window_layer,text_layer_get_layer(layer_battery_text));
 }
 
 void show_datatime_window(bool show_datatime_window)
@@ -255,27 +245,3 @@ void show_datatime_window(bool show_datatime_window)
     layer_set_hidden(text_layer_get_layer(layer_date),!show_datatime_window);
     layer_set_hidden(bitmap_layer_get_layer(layer_window),!show_datatime_window);
 }
-#ifdef PBL_COLOR
-void switch_theme(bool monochrome)
-{
-  if(monochrome)
-  {
-    bitmap_layer_set_bitmap(layer_desktop_icons,bitmap_desktop_icons_bw);   
-    bitmap_layer_set_bitmap(layer_menubar,bitmap_menubar_bw);  
-    bitmap_layer_set_bitmap(layer_window,bitmap_window_bw);   
-    bitmap_layer_set_bitmap(layer_bt,bitmap_bt_on_bw); 
-    bitmap_layer_set_bitmap(layer_qt,bitmap_qt_off_bw); 
-    bitmap_layer_set_bitmap(layer_battery,bitmap_battery_high_bw); 
-  }
-  else
-  {
-    bitmap_layer_set_bitmap(layer_desktop_icons,bitmap_desktop_icons);   
-    bitmap_layer_set_bitmap(layer_menubar,bitmap_menubar);  
-    bitmap_layer_set_bitmap(layer_window,bitmap_window);   
-    bitmap_layer_set_bitmap(layer_bt,bitmap_bt_on); 
-    bitmap_layer_set_bitmap(layer_qt,bitmap_qt_off); 
-    bitmap_layer_set_bitmap(layer_battery,bitmap_battery_high);  
-  }
-   
-}
-#endif

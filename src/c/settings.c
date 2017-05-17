@@ -22,11 +22,11 @@ void load_default_settings() {
   settings.date_format = false;
   settings.flick_enabled = false;
   settings.flick_show_duration = 10;
-  
+  settings.battery_mode = false;
+  settings.battery_text = false;
   #ifdef PBL_COLOR  
   settings.bg_color = GColorTiffanyBlue;
   settings.text_color = GColorWhite;
-  settings.monochrome_enabled = false;
   #endif
   
   #ifdef PBL_BW
@@ -35,10 +35,8 @@ void load_default_settings() {
 }
 
 void inbox_received_handler(DictionaryIterator *iter, void *context) {
-//    APP_LOG(APP_LOG_LEVEL_DEBUG, "read settings");
   
-  
-  //assign the values from settings to struct
+  //assign the values from settings to settings struct
   //vibration on disconnect
   Tuple *vibe_enabled = dict_find(iter, MESSAGE_KEY_vibe_disconnect);
   if(vibe_enabled) {
@@ -81,7 +79,20 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
   if(show_duration_t) {
     settings.flick_show_duration = atoi(show_duration_t->value->cstring);    
   }    
-   
+  
+  //battery mode
+  Tuple *battery_mode_t = dict_find(iter, MESSAGE_KEY_battery_mode);  
+  if(battery_mode_t) {
+    settings.battery_mode = battery_mode_t->value->int32 == 1;
+  }
+  
+  //battery text
+  Tuple *battery_text_t = dict_find(iter, MESSAGE_KEY_switch_bin_text);  
+  if(battery_text_t) {
+    settings.battery_text = battery_text_t->value->int32 == 1;
+  }
+  
+     
   #ifdef PBL_COLOR
    //bg color
   Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_bg_color);
@@ -93,12 +104,6 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
   Tuple *text_color_t = dict_find(iter, MESSAGE_KEY_text_color);
   if(text_color_t) {
     settings.text_color = GColorFromHEX(text_color_t->value->int32);
-  }
-  
-  //monochrome 
-  Tuple *mono_t = dict_find(iter, MESSAGE_KEY_monochrome_enabled);
-  if(mono_t) {
-   settings.monochrome_enabled = mono_t->value->int32 == 1;
   }  
   
   #endif
@@ -113,7 +118,7 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
   
   //manage flick and windows settings
    
-  //if data time window is disables - disable flick
+  //if data time window is disabled - disable flick
   if(!settings.show_datatime_window)
   {
     settings.flick_enabled = false;
