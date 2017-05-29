@@ -121,16 +121,15 @@
                     "type": "bitmap"
                 },
                 {
-                    "characterRegex": "[0-9-]",
                     "file": "fonts/Microsoft Sans Serif.ttf",
-                    "name": "FONT_TEXT_7",
+                    "name": "FONT_TEXT_11",
                     "targetPlatforms": null,
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[0-9-]",
+                    "characterRegex": "[APM 0-9:]",
                     "file": "fonts/Microsoft Sans Serif.ttf",
-                    "name": "FONT_TEXT_13",
+                    "name": "FONT_TEXT_23",
                     "targetPlatforms": null,
                     "type": "font"
                 },
@@ -142,9 +141,9 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[APM 0-9:]",
+                    "characterRegex": "[0-9-]",
                     "file": "fonts/Microsoft Sans Serif.ttf",
-                    "name": "FONT_TEXT_23",
+                    "name": "FONT_TEXT_13",
                     "targetPlatforms": null,
                     "type": "font"
                 }

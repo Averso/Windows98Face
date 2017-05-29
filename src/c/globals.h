@@ -13,9 +13,9 @@
 #define DESKTOP_H 51
 
 #define DSKTOP_TEXT_X 0
-#define DSKTOP_TEXT_Y 108
-#define DSKTOP_TEXT_W 77
-#define DSKTOP_TEXT_H 11  
+#define DSKTOP_TEXT_Y 0
+#define DSKTOP_TEXT_W 144
+#define DSKTOP_TEXT_H 51  
 
 #define WINDOW_X 19
 #define WINDOW_Y 9
@@ -36,9 +36,9 @@
 #define BATTERY_H 32
 
 #define BATTERY_TEXT_X 0
-#define BATTERY_TEXT_Y 108
-#define BATTERY_TEXT_W 77
-#define BATTERY_TEXT_H 11
+#define BATTERY_TEXT_Y 106
+#define BATTERY_TEXT_W 65
+#define BATTERY_TEXT_H 15
 
 
 #define TIME_SMALL_X 101
@@ -81,7 +81,7 @@ BitmapLayer *layer_desktop_icons,*layer_desktop_text, *layer_menubar,*layer_wind
 GBitmap *bitmap_desktop_text, *bitmap_desktop_icons, *bitmap_menubar,*bitmap_window,*bitmap_bt_on,*bitmap_bt_off,
         *bitmap_qt_on,*bitmap_qt_off,*bitmap_battery_high, *bitmap_battery_low, *bitmap_battery_icon[4];                        
 
-GFont font_menubar, font_date, font_time, font_battery;
+GFont font_menubar, font_date, font_time, font_icon_text;
 
 GColor color_desktop_text;
 int battery_level;

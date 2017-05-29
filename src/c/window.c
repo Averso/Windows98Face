@@ -32,9 +32,7 @@ void window_unload(Window *window)
   text_layer_destroy(layer_battery_text);
   
   //destroy bitmaps
-  gbitmap_destroy(bitmap_desktop_text);
-  
-
+  gbitmap_destroy(bitmap_desktop_text); 
   gbitmap_destroy(bitmap_desktop_icons);
   gbitmap_destroy(bitmap_menubar);
   gbitmap_destroy(bitmap_window);
@@ -62,7 +60,7 @@ void window_unload(Window *window)
   fonts_unload_custom_font(font_menubar);
   fonts_unload_custom_font(font_time);
   fonts_unload_custom_font(font_date);
-  fonts_unload_custom_font(font_battery);
+  fonts_unload_custom_font(font_icon_text);
  
 }
 
@@ -75,6 +73,9 @@ void window_update()
   #ifdef PBL_COLOR 
  
   window_set_background_color(main_window, settings.bg_color); 
+  
+  //change text color
+  text_layer_set_text_color(layer_battery_text,settings.text_color);  
   gbitmap_fill_all_except(GColorClear,settings.text_color,false,bitmap_desktop_text,layer_desktop_text);
   
   #else //diorite/aplite
@@ -82,12 +83,14 @@ void window_update()
   {
     window_set_background_color(main_window, GColorWhite);
     //change text color
+    text_layer_set_text_color(layer_battery_text,GColorBlack);  
     gbitmap_fill_all_except(GColorClear,GColorBlack,false,bitmap_desktop_text,layer_desktop_text);     
   }
-  else //white
+  else //white desktop
   {
     window_set_background_color(main_window, GColorBlack);
     //change text color
+    text_layer_set_text_color(layer_battery_text,GColorWhite);    
     gbitmap_fill_all_except(GColorClear,GColorWhite,false,bitmap_desktop_text,layer_desktop_text);
   }    
   #endif
@@ -108,16 +111,7 @@ void window_update()
   }
 
   show_datatime_window((settings.show_datatime_window && !settings.flick_enabled));
-  
-  //show recycle bin/battery
-  if(settings.battery_mode)
-  {
     
-  }
-  else
-  {
-    
-  }
   
   update_time();
   update_date();
@@ -138,9 +132,9 @@ void load_resources()
   font_menubar = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_15));
   font_date = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_13));  
   font_time = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_23));
-  font_battery = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_23));
+  font_icon_text = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_11));
   
-  //BITMAPS - color
+  //BITMAPS
   bitmap_desktop_text = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_DESKTOP_TEXT);
   bitmap_desktop_icons = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_DESKTOP_ICONS);  
   bitmap_menubar = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_MENUBAR);
@@ -165,15 +159,14 @@ void create_bitmap_layers(GRect bounds)
 {   
     
   layer_desktop_icons = bitmap_layer_create(bounds);  
-  layer_desktop_text = bitmap_layer_create(GRect(DSKTOP_TEXT_X,DSKTOP_TEXT_Y,DSKTOP_TEXT_W,DSKTOP_TEXT_H));  
+  layer_desktop_text = bitmap_layer_create(bounds);  
   layer_menubar = bitmap_layer_create(GRect(MENUBAR_X,MENUBAR_Y,MENUBAR_W,MENUBAR_H));
   layer_window = bitmap_layer_create(GRect(WINDOW_X,WINDOW_Y,WINDOW_W,WINDOW_H));
   layer_bt = bitmap_layer_create(GRect(BT_X,ICON_Y,ICON_W,ICON_H));
   layer_qt = bitmap_layer_create(GRect(QT_X,ICON_Y,ICON_W,ICON_H));
   layer_battery = bitmap_layer_create(GRect(BATTERY_X,BATTERY_Y,BATTERY_W,BATTERY_H));
   
-  bitmap_layer_set_bitmap(layer_desktop_text,bitmap_desktop_text);   
-   
+  bitmap_layer_set_bitmap(layer_desktop_text,bitmap_desktop_text);      
   bitmap_layer_set_bitmap(layer_desktop_icons,bitmap_desktop_icons);   
   bitmap_layer_set_bitmap(layer_menubar,bitmap_menubar);  
   bitmap_layer_set_bitmap(layer_window,bitmap_window);  
@@ -197,7 +190,7 @@ void create_text_layers()
   set_up_text_layer(layer_menubar_text, GColorClear, GColorBlack, "44:44", font_menubar,GTextAlignmentCenter);
   set_up_text_layer(layer_time, GColorClear, GColorBlack, "44:44", font_time,GTextAlignmentCenter);
   set_up_text_layer(layer_date, GColorClear, GColorBlack, "44-44-2044", font_date,GTextAlignmentCenter);
-  set_up_text_layer(layer_battery_text, GColorClear, GColorRed, "Recycle Bin", font_date,GTextAlignmentCenter);
+  set_up_text_layer(layer_battery_text, GColorClear, GColorWhite, "Recycle Bin", font_icon_text,GTextAlignmentCenter);
 }
 
 void set_up_text_layer(TextLayer *layer, GColor background, GColor text_color, const char * text,GFont font,GTextAlignment alignment)

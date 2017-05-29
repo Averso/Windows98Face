@@ -29,21 +29,45 @@ void bluetooth_callback(bool connected) {
 //BATTERY
 void battery_callback(BatteryChargeState state)
 {
-   if(settings.show_datatime_window && !settings.flick_enabled)
+  
+   if(settings.battery_mode) //baterry icon
    {
-     if( state.is_charging)
-     {
-        text_layer_set_text(layer_menubar_text,"Chrg");    
-     }
-     else
-     {
-      // change text in text layer
-      static char s_buffer[5];
-      snprintf(s_buffer, sizeof(s_buffer), "%d%%", state.charge_percent);  
-      text_layer_set_text(layer_menubar_text, s_buffer);    
-     }
-     
+      if( state.is_charging)
+      {
+          text_layer_set_text(layer_battery_text,"Charging");    
+      }
+      else
+      {
+          // change text in text layer
+          static char s_buffer[9];
+          snprintf(s_buffer, sizeof(s_buffer), "%d.pct", state.charge_percent);  
+          text_layer_set_text(layer_battery_text, s_buffer);    
+      }
    }
+   else //recycle bin
+   {
+      //switch icon text to default 'recycle bin' (however maybe it should be put somewhere else to decrease calls for set text)
+      text_layer_set_text(layer_battery_text, "Recycle Bin");
+      // if we check time/date, show battery status in menubar 
+      if(settings.show_datatime_window && !settings.flick_enabled)
+      {
+           if( state.is_charging)
+           {
+              text_layer_set_text(layer_menubar_text,"Chrg");    
+           }
+           else
+           {
+              // change text in text layer
+              static char s_buffer[5];
+              snprintf(s_buffer, sizeof(s_buffer), "%d%%", state.charge_percent);  
+              text_layer_set_text(layer_menubar_text, s_buffer);    
+           }
+     
+     }
+   }
+  
+   
+   
   
   //save battery level
   battery_level = state.charge_percent;
