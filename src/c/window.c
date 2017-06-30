@@ -1,133 +1,149 @@
 #include <pebble.h>
 #include "window.h"
 #include "globals.h"
-#include "callbacks.h"
 #include "time.h"
 #include "gbitmap_color_palette_manipulator.h"
+#include "callbacks.h"
 
-void window_load(Window *window)  
+
+/* Load all resources, fonts and bitmaps */
+static void load_resources();
+
+/* Create bitmap layers and set bitmaps to them */
+static void create_bitmap_layers(GRect bounds);
+
+/* Add all layers (text/bitmap) to the window. */
+static void add_layers_to_window(Layer *window_layer);
+
+/* Create text layers and set their preferences. */
+static void create_text_layers();
+
+/* Enable tranparency of background in loaded bitmaps. */
+static void bitmap_layers_turn_on_transparency();
+
+/* Set up given options to given layer */
+static void set_up_text_layer(TextLayer *layer, GColor background, GColor text_color, const char * text,GFont font,GTextAlignment alignment);
+
+
+
+void window_load(Window *window)
 {
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "used %zu; free: %zu",heap_bytes_used(),heap_bytes_free());
   //get window layer and bounds
-  Layer *window_layer = window_get_root_layer(window);  
-  GRect bounds = layer_get_bounds(window_layer);
-    
-      
-  load_resources(); 
-  create_bitmap_layers(bounds);
-  create_text_layers();
+  window_layer = window_get_root_layer(window);
+  window_full_bounds = layer_get_bounds(window_layer);
   
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "used %zu; free: %zu",heap_bytes_used(),heap_bytes_free());
+  //prepare and add to window text&bitmap resources
+  load_resources();
+  create_bitmap_layers(window_full_bounds);
   bitmap_layers_turn_on_transparency();
+  create_text_layers();
   add_layers_to_window(window_layer);
- 
-  window_update();  
+  
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "used %zu; free: %zu",heap_bytes_used(),heap_bytes_free());
+  window_update();
   
 }
 
 void window_unload(Window *window)
 {
-//    APP_LOG(APP_LOG_LEVEL_DEBUG, "window unload");
-  text_layer_destroy(layer_menubar_text);
-  text_layer_destroy(layer_time);
-  text_layer_destroy(layer_date);
-  text_layer_destroy(layer_battery_text);
+  //text layers
+  text_layer_destroy(textlayer_menubar);
+  text_layer_destroy(textlayer_time);
+  text_layer_destroy(textlayer_date);
+  text_layer_destroy(textlayer_battery);
+  text_layer_destroy(textlayer_weather);
   
-  //destroy bitmaps
-  gbitmap_destroy(bitmap_desktop_text); 
+  //bitmap layers
+  bitmap_layer_destroy(bitmaplayer_desktop_icons);
+  bitmap_layer_destroy(bitmaplayer_desktop_text);
+  bitmap_layer_destroy(bitmaplayer_menubar);
+  bitmap_layer_destroy(bitmaplayer_datetime_window);
+  bitmap_layer_destroy(bitmaplayer_bt);
+  bitmap_layer_destroy(bitmaplayer_qt);
+  bitmap_layer_destroy(bitmaplayer_battery);
+  
+  //bitmaps
+  gbitmap_destroy(bitmap_desktop_text);
   gbitmap_destroy(bitmap_desktop_icons);
   gbitmap_destroy(bitmap_menubar);
-  gbitmap_destroy(bitmap_window);
-  gbitmap_destroy(bitmap_bt_on);
-  gbitmap_destroy(bitmap_bt_off);
-  gbitmap_destroy(bitmap_qt_on);
-  gbitmap_destroy(bitmap_qt_off);
-  gbitmap_destroy(bitmap_battery_high);
-  gbitmap_destroy(bitmap_battery_low);
+  gbitmap_destroy(bitmap_datatime_window);
+  gbitmap_destroy(bitmap_bt[0]);
+  gbitmap_destroy(bitmap_bt[1]);
   
-  for(int i=0; i<BATTERY_LVLS;i++)  
-    gbitmap_destroy(bitmap_battery_icon[i]);     
+  #ifdef PBL_PLATFORM_APLITE
+  gbitmap_destroy(bitmap_qt);  
+  #else
+  gbitmap_destroy(bitmap_qt[0]);
+  gbitmap_destroy(bitmap_qt[1]);
+  #endif
   
+  gbitmap_destroy(bitmap_battery_bin[0]);
+  gbitmap_destroy(bitmap_battery_bin[1]);  
+  for(int i=0; i<BATTERY_STATES_NUM; i++)
+    gbitmap_destroy(bitmap_battery_icon[i]);
   
-            
-  bitmap_layer_destroy(layer_desktop_text);
-  bitmap_layer_destroy(layer_desktop_icons);
-  bitmap_layer_destroy(layer_menubar);
-  bitmap_layer_destroy(layer_window);
-  bitmap_layer_destroy(layer_bt);
-  bitmap_layer_destroy(layer_qt);
-  bitmap_layer_destroy(layer_battery);
-  
-  
+  //fonts
   fonts_unload_custom_font(font_menubar);
   fonts_unload_custom_font(font_time);
   fonts_unload_custom_font(font_date);
-  fonts_unload_custom_font(font_icon_text);
- 
+  fonts_unload_custom_font(font_icon_text);  
 }
 
 void window_update()
 {
-  //check bt status
+  //check bluetooth status
   bluetooth_callback(connection_service_peek_pebble_app_connection());     
   
-  //background color   
-  #ifdef PBL_COLOR 
- 
-  window_set_background_color(main_window, settings.bg_color); 
-  
-  //change text color
-  text_layer_set_text_color(layer_battery_text,settings.text_color);  
-  gbitmap_fill_all_except(GColorClear,settings.text_color,false,bitmap_desktop_text,layer_desktop_text);
-  
+  //get&set colors for text, background from settings
+  #ifdef PBL_COLOR  
+  window_set_background_color(main_window, settings.color_background);     
+  text_layer_set_text_color(textlayer_battery,settings.color_text);  
+  gbitmap_fill_all_except(GColorClear,settings.color_text,false,bitmap_desktop_text,bitmaplayer_desktop_text);  
   #else //diorite/aplite
-  if(settings.bg_color) //black desktop
-  {
-    window_set_background_color(main_window, GColorWhite);
-    //change text color
-    text_layer_set_text_color(layer_battery_text,GColorBlack);  
-    gbitmap_fill_all_except(GColorClear,GColorBlack,false,bitmap_desktop_text,layer_desktop_text);     
-  }
-  else //white desktop
-  {
-    window_set_background_color(main_window, GColorBlack);
-    //change text color
-    text_layer_set_text_color(layer_battery_text,GColorWhite);    
-    gbitmap_fill_all_except(GColorClear,GColorWhite,false,bitmap_desktop_text,layer_desktop_text);
-  }    
+  window_set_background_color(main_window, (settings.color_background) ? GColorWhite : GColorBlack);    
+  text_layer_set_text_color(textlayer_battery, (settings.color_background) ? GColorBlack : GColorWhite);  
+  gbitmap_fill_all_except(GColorClear,(settings.color_background) ? GColorBlack : GColorWhite,false,bitmap_desktop_text,bitmaplayer_desktop_text);  
   #endif
-  
-  
-  //show/hide and change position of data/time window
-  
-  if(settings.show_datatime_window)
+   
+  //load bitmaps depending on battery mode
+  if(settings.battery_mode)
   {
-    layer_set_frame(bitmap_layer_get_layer(layer_window),
-                    GRect(WINDOW_X,WINDOW_Y,WINDOW_W,WINDOW_H));
-    
-    layer_set_frame(text_layer_get_layer(layer_time),
-                    GRect(WINDOW_X + TIME_BIG_X_OFFSET,WINDOW_Y + TIME_BIG_Y_OFFSET,TIME_BIG_W,TIME_BIG_H));
-    
-    layer_set_frame(text_layer_get_layer(layer_date),
-                    GRect(WINDOW_X + DATE_X_OFFSET,WINDOW_Y + DATE_Y_OFFSET,DATE_W,DATE_H));
-  }
+     //destroy previous
+     gbitmap_destroy(bitmap_battery_bin[0]);
+     gbitmap_destroy(bitmap_battery_bin[1]);  
 
-  show_datatime_window((settings.show_datatime_window && !settings.flick_enabled));
+     bitmap_battery_icon[0] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_ICON_100);
+     bitmap_battery_icon[1] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_ICON_50);
+     bitmap_battery_icon[2] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_ICON_25);
+     bitmap_battery_icon[3] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_ICON_10);
+  }
+  else
+  {
+     //destroy previous
+     for(int i=0; i<BATTERY_STATES_NUM; i++)
+       gbitmap_destroy(bitmap_battery_icon[i]);
+     
+     bitmap_battery_bin[0] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BIN_HIGH);
+     bitmap_battery_bin[1] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BIN_LOW);
     
-  
+     text_layer_set_text(textlayer_battery, "Recycle Bin");
+  }
+ 
+  display_datetime_window(flick_show_dt_window);
+      
   update_time();
   update_date();
-  
+    
   //check battery - to update menubar text if needed  
   battery_callback(battery_state_service_peek());
   
-  // subscribe to tap events
-  if(settings.flick_enabled)
-    accel_tap_service_subscribe(accel_tap_handler);
-  
+ 
 }
 
-void load_resources()
+static void load_resources()
 {
-  
   //FONTS
   font_menubar = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_15));
   font_date = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_13));  
@@ -135,65 +151,101 @@ void load_resources()
   font_icon_text = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_11));
   
   //BITMAPS
-  bitmap_desktop_text = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_DESKTOP_TEXT);
+  bitmap_desktop_text = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_DESKTOP_TEXTS);
   bitmap_desktop_icons = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_DESKTOP_ICONS);  
   bitmap_menubar = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_MENUBAR);
-  bitmap_window = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_WINDOW);
-  bitmap_bt_on = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BT_ON);
-  bitmap_bt_off = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BT_OFF);
-  bitmap_qt_on = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_QT_ON);
-  bitmap_qt_off = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_QT_OFF);
-  bitmap_battery_high = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_HIGH);
-  bitmap_battery_low = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_LOW);
-  bitmap_battery_icon[0] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_100);
-  bitmap_battery_icon[1] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_50);
-  bitmap_battery_icon[2] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_25);
-  bitmap_battery_icon[3] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_10);
-
-  
-
-  
-}
-
-void create_bitmap_layers(GRect bounds)
-{   
-    
-  layer_desktop_icons = bitmap_layer_create(bounds);  
-  layer_desktop_text = bitmap_layer_create(bounds);  
-  layer_menubar = bitmap_layer_create(GRect(MENUBAR_X,MENUBAR_Y,MENUBAR_W,MENUBAR_H));
-  layer_window = bitmap_layer_create(GRect(WINDOW_X,WINDOW_Y,WINDOW_W,WINDOW_H));
-  layer_bt = bitmap_layer_create(GRect(BT_X,ICON_Y,ICON_W,ICON_H));
-  layer_qt = bitmap_layer_create(GRect(QT_X,ICON_Y,ICON_W,ICON_H));
-  layer_battery = bitmap_layer_create(GRect(BATTERY_X,BATTERY_Y,BATTERY_W,BATTERY_H));
-  
-  bitmap_layer_set_bitmap(layer_desktop_text,bitmap_desktop_text);      
-  bitmap_layer_set_bitmap(layer_desktop_icons,bitmap_desktop_icons);   
-  bitmap_layer_set_bitmap(layer_menubar,bitmap_menubar);  
-  bitmap_layer_set_bitmap(layer_window,bitmap_window);  
-  bitmap_layer_set_bitmap(layer_bt,bitmap_bt_off); 
-  bitmap_layer_set_bitmap(layer_qt,bitmap_qt_off); 
-  bitmap_layer_set_bitmap(layer_battery,bitmap_battery_high);  
+  bitmap_datatime_window = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_DATETIME_WINDOW);
+  bitmap_bt[0] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BT_ON);
+  bitmap_bt[1] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BT_OFF);
+   
+  #ifdef PBL_PLATFORM_APLITE
+  bitmap_qt = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_QT_OFF);
+  #else
+  bitmap_qt[0] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_QT_ON);
+  bitmap_qt[1] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_QT_OFF);  
+  #endif
     
 }
 
-void create_text_layers()
-{  
-  layer_menubar_text = text_layer_create(
-    GRect(TIME_SMALL_X, TIME_SMALL_Y, TIME_SMALL_W, TIME_SMALL_H));  
-  layer_time = text_layer_create(
-    GRect(TIME_BIG_X, TIME_BIG_Y, TIME_BIG_W, TIME_BIG_H));   
-  layer_date = text_layer_create(
-    GRect(DATE_X, DATE_Y,DATE_W, DATE_H));
-  layer_battery_text = text_layer_create(
-    GRect(BATTERY_TEXT_X, BATTERY_TEXT_Y,BATTERY_TEXT_W, BATTERY_TEXT_H));
+static void create_bitmap_layers(GRect bounds)
+{
+  //create bitmap layers
+  bitmaplayer_desktop_icons = bitmap_layer_create(bounds);  
+  bitmaplayer_desktop_text = bitmap_layer_create(bounds);  
+  bitmaplayer_menubar = bitmap_layer_create(GRect(MENUBAR_X,MENUBAR_Y,MENUBAR_W,MENUBAR_H));
+  bitmaplayer_datetime_window = bitmap_layer_create(GRect(DT_WINDOW_X,DT_WINDOW_Y,DT_WINDOW_W,DT_WINDOW_H));
+  bitmaplayer_bt = bitmap_layer_create(GRect(BT_ICON_X,MB_ICON_Y,MB_ICON_W,MB_ICON_H));
+  bitmaplayer_qt = bitmap_layer_create(GRect(QT_ICON_X,MB_ICON_Y,MB_ICON_W,MB_ICON_H));
+  bitmaplayer_battery = bitmap_layer_create(GRect(BATTERY_ICON_X,BATTERY_ICON_Y,BATTERY_ICON_W,BATTERY_ICON_H));
   
-  set_up_text_layer(layer_menubar_text, GColorClear, GColorBlack, "44:44", font_menubar,GTextAlignmentCenter);
-  set_up_text_layer(layer_time, GColorClear, GColorBlack, "44:44", font_time,GTextAlignmentCenter);
-  set_up_text_layer(layer_date, GColorClear, GColorBlack, "44-44-2044", font_date,GTextAlignmentCenter);
-  set_up_text_layer(layer_battery_text, GColorClear, GColorWhite, "Recycle Bin", font_icon_text,GTextAlignmentCenter);
+  //set corresponding bitmaps to them
+  bitmap_layer_set_bitmap(bitmaplayer_desktop_icons,bitmap_desktop_icons);   
+  bitmap_layer_set_bitmap(bitmaplayer_desktop_text,bitmap_desktop_text);       
+  bitmap_layer_set_bitmap(bitmaplayer_menubar,bitmap_menubar);  
+  bitmap_layer_set_bitmap(bitmaplayer_datetime_window,bitmap_datatime_window);  
+  bitmap_layer_set_bitmap(bitmaplayer_bt,bitmap_bt[0]); 
+  
+  #ifdef PBL_PLATFORM_APLITE
+  bitmap_layer_set_bitmap(bitmaplayer_qt,bitmap_qt); 
+  #else
+  bitmap_layer_set_bitmap(bitmaplayer_qt,bitmap_qt[0]); 
+  #endif
+  
 }
 
-void set_up_text_layer(TextLayer *layer, GColor background, GColor text_color, const char * text,GFont font,GTextAlignment alignment)
+static void bitmap_layers_turn_on_transparency()
+{
+  bitmap_layer_set_compositing_mode(bitmaplayer_desktop_icons, GCompOpSet); 
+  bitmap_layer_set_compositing_mode(bitmaplayer_desktop_text, GCompOpSet); 
+  bitmap_layer_set_compositing_mode(bitmaplayer_menubar, GCompOpSet);   
+  bitmap_layer_set_compositing_mode(bitmaplayer_datetime_window, GCompOpSet); 
+  bitmap_layer_set_compositing_mode(bitmaplayer_bt, GCompOpSet);   
+  bitmap_layer_set_compositing_mode(bitmaplayer_qt, GCompOpSet);   
+  bitmap_layer_set_compositing_mode(bitmaplayer_battery, GCompOpSet);   
+}
+
+static void add_layers_to_window(Layer *window_layer)
+{
+  
+  layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_desktop_icons));
+  layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_desktop_text));
+  layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_menubar));
+  layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_bt));
+  layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_qt));
+  layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_battery));    
+  layer_add_child(window_layer,text_layer_get_layer(textlayer_battery));
+  layer_add_child(window_layer,text_layer_get_layer(textlayer_menubar));    
+  layer_add_child(window_layer,text_layer_get_layer(textlayer_weather)); 
+  
+  layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_datetime_window));        
+  layer_add_child(window_layer,text_layer_get_layer(textlayer_time));
+  layer_add_child(window_layer,text_layer_get_layer(textlayer_date));
+  
+}
+
+static void create_text_layers()
+{
+  //create layers
+  textlayer_menubar = text_layer_create(
+    GRect(TIME_MENUBAR_X, TIME_MENUBAR_Y, TIME_MENUBAR_W, TIME_MENUBAR_H));  
+  textlayer_time = text_layer_create(
+    GRect(TIME_DATETIME_X,TIME_DATETIME_Y, TIME_DATETIME_W, TIME_DATETIME_H));
+  textlayer_date = text_layer_create(
+    GRect(DATE_DATETIME_X,DATE_DATETIME_Y, DATE_DATETIME_W, DATE_DATETIME_H));
+  textlayer_battery = text_layer_create(
+    GRect(BATTERY_ICON_TEXT_X, BATTERY_ICON_TEXT_Y,BATTERY_ICON_TEXT_W, BATTERY_ICON_TEXT_H));
+  textlayer_weather = text_layer_create(
+    GRect(WEATHER_ICON_TEXT_X,WEATHER_ICON_TEXT_Y,WEATHER_ICON_TEXT_W,WEATHER_ICON_TEXT_H));
+  
+  //set up layers with colors, text, fonts etc.
+  set_up_text_layer(textlayer_menubar, GColorClear, GColorBlack, "44:44", font_menubar,GTextAlignmentCenter);
+  set_up_text_layer(textlayer_time, GColorClear, GColorBlack, "44:44", font_time,GTextAlignmentCenter);
+  set_up_text_layer(textlayer_date, GColorClear, GColorBlack, "44-44-2044", font_date,GTextAlignmentCenter);
+  set_up_text_layer(textlayer_battery, GColorClear, GColorWhite, "Recycle Bin", font_icon_text,GTextAlignmentCenter);
+  set_up_text_layer(textlayer_weather, GColorBlue, GColorWhite, "Loading...", font_icon_text,GTextAlignmentCenter);
+}
+
+static void set_up_text_layer(TextLayer *layer, GColor background, GColor text_color, const char * text,GFont font,GTextAlignment alignment)
 {
   text_layer_set_background_color(layer, background);
   text_layer_set_text_color(layer, text_color);
@@ -202,39 +254,55 @@ void set_up_text_layer(TextLayer *layer, GColor background, GColor text_color, c
   text_layer_set_text_alignment(layer,alignment); 
 }
 
-void bitmap_layers_turn_on_transparency()
+void display_datetime_window(bool show)
 {
-  bitmap_layer_set_compositing_mode(layer_desktop_icons, GCompOpSet); 
-  bitmap_layer_set_compositing_mode(layer_desktop_text, GCompOpSet); 
-  bitmap_layer_set_compositing_mode(layer_menubar, GCompOpSet);   
-  bitmap_layer_set_compositing_mode(layer_window, GCompOpSet); 
-  bitmap_layer_set_compositing_mode(layer_bt, GCompOpSet);   
-  bitmap_layer_set_compositing_mode(layer_qt, GCompOpSet);   
-  bitmap_layer_set_compositing_mode(layer_battery, GCompOpSet);   
-  
+  layer_set_hidden(text_layer_get_layer(textlayer_time),!show);
+  layer_set_hidden(text_layer_get_layer(textlayer_date),!show);
+  layer_set_hidden(bitmap_layer_get_layer(bitmaplayer_datetime_window),!show);  
 }
 
-void add_layers_to_window(Layer *window_layer)
+void show_battery_menubar()
 {
-  //bitmaps
-  layer_add_child(window_layer,bitmap_layer_get_layer(layer_desktop_icons));
-  layer_add_child(window_layer,bitmap_layer_get_layer(layer_desktop_text));
-  layer_add_child(window_layer,bitmap_layer_get_layer(layer_menubar));
-  layer_add_child(window_layer,bitmap_layer_get_layer(layer_bt));
-  layer_add_child(window_layer,bitmap_layer_get_layer(layer_qt));
-  layer_add_child(window_layer,bitmap_layer_get_layer(layer_battery));  
-  layer_add_child(window_layer,bitmap_layer_get_layer(layer_window));
-  
-  //text
-  layer_add_child(window_layer,text_layer_get_layer(layer_menubar_text));  
-  layer_add_child(window_layer,text_layer_get_layer(layer_time));
-  layer_add_child(window_layer,text_layer_get_layer(layer_date));
-  layer_add_child(window_layer,text_layer_get_layer(layer_battery_text));
+   static char buffer[5];
+   snprintf(buffer, sizeof(buffer), "%d%%", battery_level);  
+   text_layer_set_text(textlayer_menubar, buffer);    
+   
 }
 
-void show_datatime_window(bool show_datatime_window)
-{
-    layer_set_hidden(text_layer_get_layer(layer_time),!show_datatime_window);
-    layer_set_hidden(text_layer_get_layer(layer_date),!show_datatime_window);
-    layer_set_hidden(bitmap_layer_get_layer(layer_window),!show_datatime_window);
+void move_layer_vertically(GRect bounds,char offset, Layer *layer)
+{  
+  // Get the current position of layer
+  GRect frame = layer_get_frame(layer);
+  // Shift the Y coordinate
+  frame.origin.y =  bounds.size.h - offset;
+  // Apply the new location
+  layer_set_frame(layer, frame);  
 }
+
+void update_battery_icon()
+{
+   APP_LOG(APP_LOG_LEVEL_DEBUG, "battery update");
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "used %zu; free: %zu",heap_bytes_used(),heap_bytes_free());
+  if(settings.battery_mode) //baterry icon
+  {
+     //change battery image depending on battery lvl  
+    if(battery_level<=100 && battery_level>50)      
+      bitmap_layer_set_bitmap(bitmaplayer_battery, bitmap_battery_icon[0]);    
+    else if (battery_level<=50 && battery_level>25)    
+     bitmap_layer_set_bitmap(bitmaplayer_battery, bitmap_battery_icon[1]);    
+    else if (battery_level<=25 && battery_level>10)
+      bitmap_layer_set_bitmap(bitmaplayer_battery, bitmap_battery_icon[2]);
+    else
+      bitmap_layer_set_bitmap(bitmaplayer_battery, bitmap_battery_icon[3]);
+  }
+  else
+  {
+    //change recycle bin image depending on battery lvl  
+    if(battery_level<=100 && battery_level>settings.battery_warning_level)  
+       bitmap_layer_set_bitmap(bitmaplayer_battery, settings.switch_bin_state ? bitmap_battery_bin[1] : bitmap_battery_bin[0]);     
+    else     
+      bitmap_layer_set_bitmap(bitmaplayer_battery, settings.switch_bin_state ? bitmap_battery_bin[0] : bitmap_battery_bin[1]);
+  }
+    
+}
+

@@ -1,34 +1,122 @@
 {
     "author": "Averso",
     "dependencies": {
-        "pebble-clay": "^1.0.3"
+        "pebble-clay": "^1.0.4"
     },
     "keywords": [],
     "name": "windows-98",
     "pebble": {
         "capabilities": [
+            "location",
             "configurable"
         ],
         "displayName": "Windows 98",
         "enableMultiJS": true,
         "messageKeys": [
-            "bg_color",
+            "color_background_bw",
+            "color_background",
+            "color_text",
+            "vibe_on_disconnect",
             "battery_warning_level",
-            "vibe_disconnect",
-            "enable_window",
-            "text_color",
             "switch_bin_state",
             "date_format",
-            "monochrome_enabled",
-            "bg_color_bw",
-            "enable_flick",
-            "flick_show_duration",
+            "flick_display_duration",
             "battery_mode",
-            "switch_bin_text"
+            "temperature"
         ],
         "projectType": "native",
         "resources": {
             "media": [
+                {
+                    "file": "images/thunderstorm.png",
+                    "name": "IMAGE_THUNDERSTORM",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/snow.png",
+                    "name": "IMAGE_SNOW",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/shower_rain.png",
+                    "name": "IMAGE_RAIN",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/scattered_clouds.png",
+                    "name": "IMAGE_SCATTERED_CLOUD",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/mist.png",
+                    "name": "IMAGE_MIST",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/few_clouds.png",
+                    "name": "IMAGE_FEW_CLOUDS",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/clear_sky.png",
+                    "name": "IMAGE_CLEAR_SKY",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/battery_100.png",
+                    "name": "IMAGE_BATTERY_ICON_100",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/battery_50.png",
+                    "name": "IMAGE_BATTERY_ICON_50",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/battery_25.png",
+                    "name": "IMAGE_BATTERY_ICON_25",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/battery_10.png",
+                    "name": "IMAGE_BATTERY_ICON_10",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/battery_bin_low.png",
+                    "name": "IMAGE_BIN_LOW",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/battery_bin_high.png",
+                    "name": "IMAGE_BIN_HIGH",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/qt-on.png",
+                    "name": "IMAGE_QT_ON",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/qt-off.png",
+                    "name": "IMAGE_QT_OFF",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
                 {
                     "file": "images/bt-on.png",
                     "name": "IMAGE_BT_ON",
@@ -42,32 +130,8 @@
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/battery_10.png",
-                    "name": "IMAGE_BATTERY_10",
-                    "targetPlatforms": null,
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/battery_25.png",
-                    "name": "IMAGE_BATTERY_25",
-                    "targetPlatforms": null,
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/battery_50.png",
-                    "name": "IMAGE_BATTERY_50",
-                    "targetPlatforms": null,
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/battery_100.png",
-                    "name": "IMAGE_BATTERY_100",
-                    "targetPlatforms": null,
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/desktop-text.png",
-                    "name": "IMAGE_DESKTOP_TEXT",
+                    "file": "images/desktop-texts.png",
+                    "name": "IMAGE_DESKTOP_TEXTS",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 },
@@ -78,58 +142,21 @@
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/icon.png",
-                    "menuIcon": true,
-                    "name": "IMAGE_ICON",
-                    "targetPlatforms": null,
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/window.png",
-                    "name": "IMAGE_WINDOW",
-                    "targetPlatforms": null,
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/bar.png",
+                    "file": "images/menubar.png",
                     "name": "IMAGE_MENUBAR",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/qt-off.png",
-                    "name": "IMAGE_QT_OFF",
+                    "file": "images/window.png",
+                    "name": "IMAGE_DATETIME_WINDOW",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/qt-on.png",
-                    "name": "IMAGE_QT_ON",
-                    "targetPlatforms": null,
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/battery_low.png",
-                    "name": "IMAGE_BATTERY_LOW",
-                    "targetPlatforms": null,
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/battery_high.png",
-                    "name": "IMAGE_BATTERY_HIGH",
-                    "targetPlatforms": null,
-                    "type": "bitmap"
-                },
-                {
+                    "characterRegex": "[0-9-]",
                     "file": "fonts/Microsoft Sans Serif.ttf",
-                    "name": "FONT_TEXT_11",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
-                    "characterRegex": "[APM 0-9:]",
-                    "file": "fonts/Microsoft Sans Serif.ttf",
-                    "name": "FONT_TEXT_23",
+                    "name": "FONT_TEXT_13",
                     "targetPlatforms": null,
                     "type": "font"
                 },
@@ -141,11 +168,24 @@
                     "type": "font"
                 },
                 {
-                    "characterRegex": "[0-9-]",
+                    "characterRegex": "[APM 0-9:]",
                     "file": "fonts/Microsoft Sans Serif.ttf",
-                    "name": "FONT_TEXT_13",
+                    "name": "FONT_TEXT_23",
                     "targetPlatforms": null,
                     "type": "font"
+                },
+                {
+                    "file": "fonts/Microsoft Sans Serif.ttf",
+                    "name": "FONT_TEXT_11",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "images/icon.png",
+                    "menuIcon": true,
+                    "name": "IMAGE_APPICON",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
                 }
             ]
         },
@@ -155,7 +195,7 @@
             "basalt",
             "diorite"
         ],
-        "uuid": "3ec6fe76-36cc-4a44-a467-6d76d8a09dd8",
+        "uuid": "42649578-c5de-47fc-9eab-9ec2446f2df9",
         "watchapp": {
             "watchface": true
         }

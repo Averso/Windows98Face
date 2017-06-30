@@ -2,22 +2,7 @@
 #include "gbitmap_color_palette_manipulator.h"
 // https://github.com/rebootsramblings/GBitmap-Colour-Palette-Manipulator
 
-
-
 //#define SHOW_APP_LOGS
-
-char* get_gbitmapformat_text(GBitmapFormat format){
-	switch (format) {
-		case GBitmapFormat1Bit: return "GBitmapFormat1Bit";
-		case GBitmapFormat8Bit: return "GBitmapFormat8Bit";
-		case GBitmapFormat1BitPalette: return "GBitmapFormat1BitPalette";
-		case GBitmapFormat2BitPalette: return "GBitmapFormat2BitPalette";
-		case GBitmapFormat4BitPalette: return "GBitmapFormat4BitPalette";
-
-		default: return "UNKNOWN FORMAT";
-	}
-
-}
 
 int get_num_palette_colors(GBitmap *b){
 
@@ -32,95 +17,6 @@ int get_num_palette_colors(GBitmap *b){
 
 		default: return 0;
 	}
-
-}
-
-void replace_gbitmap_color(GColor color_to_replace, GColor replace_with_color, GBitmap *im, BitmapLayer *bml){
-
-	//First determine what the number of colors in the palette
-	int num_palette_items = get_num_palette_colors(im);
-
-	#ifdef SHOW_APP_LOGS
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Palette has %d items", num_palette_items);
-	#endif
-
-	//Get the gbitmap's current palette
-	GColor *current_palette = gbitmap_get_palette(im);
-
-	//Iterate through the palette finding the color we want to replace and replacing 
-	//it with the new color
-	#ifdef SHOW_APP_LOGS
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "--Replace Color Start--");
-	#endif 
-
-	for(int i = 0; i < num_palette_items; i++){
-
-		#ifdef SHOW_APP_LOGS
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "Palette[%d] = %s (alpha:%d)", i, get_gcolor_text(current_palette[i]),(current_palette[i].argb >>6));
-		#endif
-
-		if ((color_to_replace.argb & 0x3F)==(current_palette[i].argb & 0x3F)){
-
-			current_palette[i].argb = (current_palette[i].argb & 0xC0)| (replace_with_color.argb & 0x3F);
-			#ifdef SHOW_APP_LOGS
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "-------[%d] replaced with %s (alpha:%d)", i, get_gcolor_text(current_palette[i]),(current_palette[i].argb >>6));
-			#endif
-			
-		}
-
-	}
-
-	#ifdef SHOW_APP_LOGS
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "--Replace Color End--");
-	#endif
-
-	//Mark the bitmaplayer dirty
-	if(bml != NULL){
-		layer_mark_dirty(bitmap_layer_get_layer(bml));
-	}
-
-}
-
-bool gbitmap_color_palette_contains_color(GColor m_color, GBitmap *im){
-
-	int num_palette_items = get_num_palette_colors(im);
-	GColor *current_palette = gbitmap_get_palette(im);
-	for(int i = 0; i < num_palette_items; i++){
-
-		if ((m_color.argb & 0x3F)==(current_palette[i].argb & 0x3F)){
-			#ifdef SHOW_APP_LOGS
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "GBitmap contains: %s", get_gcolor_text(current_palette[i]));
-			#endif
-
-			return true;
-		}
-
-	}
-
-	#ifdef SHOW_APP_LOGS
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "GBitmap does not contain: %s", get_gcolor_text(m_color));
-	#endif
-
-	return false;
-
-}
-
-void spit_gbitmap_color_palette(GBitmap *im){
-
-	//First determine what the number of colors in the palette
-	int num_palette_items = get_num_palette_colors(im);
-
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Palette has %d items", num_palette_items);
-
-	GColor *current_palette = gbitmap_get_palette(im);
-
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "--Spit Palette Start--");
-	for(int i = 0; i < num_palette_items; i++){
-
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "Palette[%d] = %s (alpha:%d)", i, get_gcolor_text(current_palette[i]),(current_palette[i].argb >>6) );
-
-	}
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "--Spit Palette End--");
 
 }
 

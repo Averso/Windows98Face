@@ -1,16 +1,22 @@
 #pragma once
-#pragma once
-#include <pebble.h>
+#include<pebble.h>
 
-void window_load(Window *window);
-void window_unload(Window *window);
 void window_update();
-void load_resources();
-void create_bitmap_layers(GRect bounds);
-void reate_text_layers();
-void add_layers_to_window(Layer *window_layer);
-void set_up_text_layer(TextLayer *layer, GColor background, GColor text_color, 
-const char * text,GFont font,GTextAlignment alignment); //set up text layer with givent parameters
-void create_text_layers();
-void bitmap_layers_turn_on_transparency();
-void show_datatime_window(bool hide);
+
+/* Used as a window handler .load. Preapares all resources, layers.*/
+void window_load(Window *window);
+
+/* Used as a window handler .unload. Destroys all resources, layers.*/
+void window_unload(Window *window);
+
+/* Hide/show layers related to displaying date&time window. */
+void display_datetime_window(bool show);
+
+/* Set proper image for battery icon based */
+void update_battery_icon();
+
+/* Display battery percentage in menubar instead of time */
+void show_battery_menubar();
+
+/* Move layer vertically relatively to given unobstructed area of window by given offset. */
+void move_layer_vertically(GRect bounds, char offset, Layer *layer);

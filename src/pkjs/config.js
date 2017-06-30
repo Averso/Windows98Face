@@ -1,100 +1,104 @@
 module.exports = [
+  
+  //---heading---//
   {
     "type": "heading",
     "defaultValue": "WINDOWS 98"
   },
+  
+  //---colors---//
   {
     "type": "section",
-    
-    "items": [
+    "items":
+    [
       {
         "type": "heading",
         "defaultValue": "Colors"
       },
       {
         "type": "toggle",
-        "messageKey": "bg_color_bw",
+        "messageKey": "color_background_bw",
         "label": "Desktop color black/white",
-        "defaultValue": false,
+        "defaultValue": true,
         "capabilities": ["BW"]
-      },      
+      },
       {
         "type": "color",
-        "messageKey": "bg_color",
+        "messageKey": "color_background",
         "defaultValue": "0x00AAAA",
         "label": "Background Color",
         "capabilities": ["COLOR"]
       },
       {
         "type": "color",
-        "messageKey": "text_color",
+        "messageKey": "color_text",
         "defaultValue": "0xFFFFFF",
         "label": "Desktop text color",
         "capabilities": ["COLOR"]
       }
     ]
   },
+  
+  //---datetime windows---//
   {
     "type": "section",
-    "items": [
+    "items" :
+    [
       {
         "type": "heading",
-        "defaultValue": "Data/time window settings"
+        "defaultValue": "Date&time window"
       },
       {
         "type": "toggle",
-        "messageKey": "enable_window",
-        "label": "Enable data/time window",
-        "defaultValue": false
-      },      
-      {
-      "type": "section",
-      "items": [
-      {
-        "type": "heading",
-        "defaultValue": "Flick",       
-      },
-      {
-        "type": "toggle",
-        "messageKey": "enable_flick",
-        "label": "Enable flick to show/hide data/time window",
+        "messageKey": "date_format",
+        "label": "Date format",
+        "description": "dd-mm-yyyy/mm-dd-yyyy",
         "defaultValue": false
       },
       {
         "type": "input",
-        "messageKey": "flick_show_duration",
+        "messageKey": "flick_display_duration",
         "defaultValue": "10",
-        "description": "Default: 10s. Max: 60s ",
-        "label": "Show duration.",
+        "description": "How long date&time window will be displayed after flick (in seconds).",
+        "label": "Display duration.",
         "attributes": {
         "type": "number",
         "max":"60",
         "min":"1"
         }
-      }      
-      ]},
-      {
-        "type": "section",
-        "items": [
-        {
-          "type": "heading",
-          "defaultValue": "Others"
-        },      
-        {
-           "type": "toggle",
-           "messageKey": "date_format",
-           "label": "Date format",
-           "description": "dd-mm-yyyy/mm-dd-yyyy",
-           "defaultValue": false
-        }
-        ]
-      }      
-            
+      }            
     ]
   },
+  
+  //---weather---//
+  {
+    "type": "section",      
+    "items": 
+    [
+      {
+      "type": "heading",
+      "defaultValue": "Weather"
+      },               
+      {
+        "type": "toggle",
+        "messageKey": "weather_enabled",
+        "label": "Enable weather",
+        "defaultValue": true
+      },
+      {
+        "type": "toggle",
+        "messageKey": "weather_enabled",
+        "label": "Enable weather",
+        "defaultValue": true
+      }
+    ]
+  },
+  
+  //---battery---//
   {
     "type":"section",
-    "items": [
+    "items": 
+    [
       {
         "type":"heading",
         "defaultValue":"Battery"
@@ -105,10 +109,12 @@ module.exports = [
         "label": "Battery mode",
         "description": "Recycle Bin/Battery Icon",
         "defaultValue": false
-      },     
+      },
       {
+        //---recycle bin---//
         "type": "section",
-        "items": [
+        "items": 
+        [
           {
           "type": "heading",
           "defaultValue": "Recycle Bin",       
@@ -116,8 +122,8 @@ module.exports = [
           {
           "type": "toggle",
           "messageKey": "switch_bin_state",
-          "label": "Switch bin states",
-          "description": "Switch default low battery warning states for recycle bin. Set: low = empty; Unset: low = full.",
+          "label": "Switch bin state",
+          "description": "Switch low battery warning state for recycle bin. Set: low = empty; Unset: low = full bin.",
           "defaultValue": false
          },
          {
@@ -125,40 +131,42 @@ module.exports = [
           "messageKey": "battery_warning_level",
           "defaultValue": "40",
           "label": "Baterry warning level",
+          "description": "On what battery percentage warning will indicate.",
           "attributes": {
           "type": "number",
           "max":"100",
           "min":"1"
           }
-        },
-        {
-          "type": "toggle",
-          "messageKey": "switch_bin_text",
-          "label": "Label",
-          "description": "Show 'Recycle Bin' text/battery status.",
-          "defaultValue": false
-        }        
+        }     
         ]
-      }             
+      }
+      
     ]
   },
+  
+  //---others---//
   {
     "type": "section",      
-    "items": [
+    "items": 
+    [
       {
       "type": "heading",
       "defaultValue": "Others"
       },               
       {
         "type": "toggle",
-        "messageKey": "vibe_disconnect",
+        "messageKey": "vibe_on_disconnect",
         "label": "Vibrate on disconnect",
         "defaultValue": true
       }
     ]
   },
+  
+  //---submit---//
   {
     "type": "submit",
     "defaultValue": "Save Settings"
   }
+  
+  
 ];

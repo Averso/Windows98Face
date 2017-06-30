@@ -2,7 +2,8 @@
 #include <pebble.h>
 
 
+/* Handle AppMessage conetion messages. Assign the values from clay settings to settings struct. */
 void inbox_received_handler(DictionaryIterator *iter, void *context);
-void load_default_settings();
-void save_settings();
+
+/* Load default settings and read settings from persistent storage if exist. */
 void load_settings();
