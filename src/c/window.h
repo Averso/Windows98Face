@@ -20,3 +20,6 @@ void show_battery_menubar();
 
 /* Move layer vertically relatively to given unobstructed area of window by given offset. */
 void move_layer_vertically(GRect bounds, char offset, Layer *layer);
+
+/* Update weather text with igvern temerature and set icon to appropriate to weather conditions*/
+void updateWeatherTextIcon(const char * temp, uint8_t icon_num);

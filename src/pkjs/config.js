@@ -56,17 +56,15 @@ module.exports = [
         "defaultValue": false
       },
       {
-        "type": "input",
+        "type":"slider",
         "messageKey": "flick_display_duration",
-        "defaultValue": "10",
+        "defaultValue": 10,
+        "label": "Display duration",
         "description": "How long date&time window will be displayed after flick (in seconds).",
-        "label": "Display duration.",
-        "attributes": {
-        "type": "number",
-        "max":"60",
-        "min":"1"
-        }
-      }            
+        "min": 1,
+        "max": 60,
+        "step": 1 
+      }                 
     ]
   },
   
@@ -78,7 +76,7 @@ module.exports = [
       {
       "type": "heading",
       "defaultValue": "Weather"
-      },               
+      },                   
       {
         "type": "toggle",
         "messageKey": "weather_enabled",
@@ -86,11 +84,44 @@ module.exports = [
         "defaultValue": true
       },
       {
+        "type": "input",
+        "messageKey": "weather_api_key",
+        "defaultValue": "",
+        "label": "OpenWeatherMaps API key",
+      },
+      {
         "type": "toggle",
-        "messageKey": "weather_enabled",
-        "label": "Enable weather",
+        "messageKey": "weather_units",
+        "label": "Units",
+        "description": "Fahrenheit/Celsius",
         "defaultValue": true
+      },
+      {
+        "type": "toggle",
+        "messageKey": "weather_gps_on",
+        "label": "Use GPS",
+        "defaultValue": true
+      },
+      {
+        "type": "input",
+        "messageKey": "weather_fixed_location",
+        "defaultValue": "",
+        "label": "Fixed location",
+        "attributes": {
+          "placeholder": "City,Counry Code",        
+        }        
+      },
+      {
+        "type":"slider",
+        "messageKey": "weather_update_interval",
+        "defaultValue": "30",
+        "label": "Update interval",
+        "description": "Weather update interval in minutes",
+        "min": 15,
+        "max": 60,
+        "step": 5 
       }
+      
     ]
   },
   
@@ -127,17 +158,15 @@ module.exports = [
           "defaultValue": false
          },
          {
-          "type": "input",
+          "type": "slider",
           "messageKey": "battery_warning_level",
-          "defaultValue": "40",
+          "defaultValue": 40,
           "label": "Baterry warning level",
           "description": "On what battery percentage warning will indicate.",
-          "attributes": {
-          "type": "number",
-          "max":"100",
-          "min":"1"
-          }
-        }     
+          "min": 10,
+          "max": 100,
+          "step": 10          
+         }     
         ]
       }
       

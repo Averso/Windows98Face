@@ -33,7 +33,7 @@ static void init(void)
     
     //open AppMessage
     app_message_register_inbox_received(inbox_received_handler);
-    app_message_open(128, 128);
+    app_message_open(256, 256);
     
     //WINDOW      
     window_set_window_handlers(main_window,(WindowHandlers){

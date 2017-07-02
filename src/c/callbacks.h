@@ -16,3 +16,7 @@ void unobstructed_will_change_callback(GRect final_unobstructed_screen_area,void
 void unobstructed_did_change_callback(void *context);
 void unobstructed_change_callback(AnimationProgress progress, void *context);
 #endif
+
+
+//APPMESSAGES
+void inbox_received_handler(DictionaryIterator *iter, void *context);

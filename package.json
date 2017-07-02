@@ -22,50 +22,75 @@
             "date_format",
             "flick_display_duration",
             "battery_mode",
-            "temperature"
+            "weather_enabled",
+            "weather_gps_on",
+            "weather_fixed_location",
+            "weather_update_interval",
+            "weather_units",
+            "weather_temperature",
+            "weather_icon",
+            "weather_api_key"
         ],
         "projectType": "native",
         "resources": {
             "media": [
                 {
-                    "file": "images/thunderstorm.png",
+                    "file": "images/wt_loading.png",
+                    "name": "IMAGE_LOADING",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/wt_na.png",
+                    "name": "IMAGE_NOT_AVAILABLE",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/wt_broken_clouds.png",
+                    "name": "IMAGE_BROKEN_CLOUDS",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/wt_thunderstorm.png",
                     "name": "IMAGE_THUNDERSTORM",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/snow.png",
+                    "file": "images/wt_snow.png",
                     "name": "IMAGE_SNOW",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/shower_rain.png",
+                    "file": "images/wt_rain.png",
                     "name": "IMAGE_RAIN",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/scattered_clouds.png",
+                    "file": "images/wt_scattered_clouds.png",
                     "name": "IMAGE_SCATTERED_CLOUD",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/mist.png",
+                    "file": "images/wt_mist.png",
                     "name": "IMAGE_MIST",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/few_clouds.png",
-                    "name": "IMAGE_FEW_CLOUDS",
+                    "file": "images/wt_clear_sky.png",
+                    "name": "IMAGE_CLEAR_SKY",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/clear_sky.png",
-                    "name": "IMAGE_CLEAR_SKY",
+                    "file": "images/wt_few_clouds.png",
+                    "name": "IMAGE_FEW_CLOUDS",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 },

@@ -9,18 +9,18 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
   if(units_changed & DAY_UNIT)
     update_date(); 
   
-  // Get weather update every 30 minutes
-//   if(tick_time->tm_min % 30 == 0) {
-//     // Begin dictionary
-//     DictionaryIterator *iter;
-//     app_message_outbox_begin(&iter);
+  //  Get weather update every 30 minutes
+  if(settings.weather_enabled && (tick_time->tm_min % settings.weather_update_interval == 0)) {
+    // Begin dictionary
+    DictionaryIterator *iter;
+    app_message_outbox_begin(&iter);
 
-//     // Add a key-value pair
-//     dict_write_uint8(iter, 0, 0);
+    // Add a key-value pair
+    dict_write_uint8(iter, 0, 0);
 
-//     // Send the message!
-//     app_message_outbox_send();
-//   }
+    // Send the message!
+    app_message_outbox_send();
+  }
 }
 
 

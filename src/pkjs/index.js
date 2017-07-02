@@ -1,13 +1,178 @@
+//CLAY
 var Clay = require('pebble-clay');
 var clayConfig = require('./config');
 var customClay = require('./custom-clay');
 var clay = new Clay(clayConfig, customClay);
 
-// // Import the Clay package
-// var Clay = require('pebble-clay');
-// // Load our Clay configuration file
-// var clayConfig = require('./config');
-// // Initialize Clay
-// var clay = new Clay(clayConfig);
+
+//WEATHER
+var claySettings = JSON.parse(localStorage.getItem('clay-settings'));
 
 
+var xhrRequest = function (url, type, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function () {
+    callback(this.responseText);
+  };
+  xhr.open(type, url);
+  xhr.send();
+};
+
+
+function fetchWeatherGps(lat, lang)
+{
+   var url = "http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lang+"&cnt=1&APPID=db8a85437a0dab1e93d39ca60326d0a1";// + claySettings.weather_api_key;
+   console.log(url);
+   fetchWeather(url);
+}
+
+function fetchWeatherFxdLocation(location)
+{
+   
+   var url = "http://api.openweathermap.org/data/2.5/weather?q="+ location +"&APPID=db8a85437a0dab1e93d39ca60326d0a1";// + claySettings.weather_api_key;
+  console.log(url);
+   fetchWeather(url);
+}
+
+function iconFromWeatherId(weatherId) {
+  if (weatherId < 233) { //thunderstorm
+    return 1;
+  } else if (weatherId < 532) { //shower rain/rain
+    return 2;
+  } else if (weatherId < 623) { //snow
+    return 3;
+  } else if (weatherId < 782) { //mist
+    return 4;
+  } else if (weatherId == 800) { //clear sky
+    return 5;
+  } else if (weatherId == 801) { //few clouds
+    return 6;
+  } else if (weatherId == 802) { //scattered clouds
+    return 7;
+  } else if (weatherId == 803 || weatherId == 804) { //broken clouds
+    return 8;
+  } else {
+    return 0;
+  }
+}
+
+
+function fetchWeather(url)
+{
+  // Send request
+  xhrRequest(url, 'GET', 
+    function(responseText) {
+      var json = JSON.parse(responseText);
+      //console.log(responseText);
+      
+      //if we received weather information
+      if(json.cod == 200)
+      {
+          // Temperature (in Celsius, because it doesn't suck)
+          var temperature = Math.round(json.main.temp - 273.15);
+          console.log("Temperature is " + temperature);
+      
+          // Conditions
+          var icon = iconFromWeatherId(json.weather[0].id);
+          // var conditions = json.weather[0].main;      
+          //console.log('Conditions are ' + conditions);
+          
+          // Push into a dictionary
+          var dictionary = {
+            "weather_temperature": temperature  + '\xB0C',
+            "weather_icon": icon
+          };
+
+          // Send to Pebble
+          Pebble.sendAppMessage(dictionary,
+            function(e) {
+              console.log("Weather info sent to Pebble successfully!");
+            },
+            function(e) {
+              console.log("Error sending weather info to Pebble!");
+            }
+          );
+      }
+      
+    }      
+  );
+}
+
+
+
+function locationSuccess(pos) {
+  var coords = pos.coords;
+  fetchWeatherGps(coords.latitude, coords.longitude);    
+}
+
+function locationError(err) {
+  console.log("Error requesting location!");
+  Pebble.sendAppMessage({
+     "weather_temperature": 'N/A',
+     "weather_icon": 0
+  });
+}
+
+function getWeatherWithGps() {
+  navigator.geolocation.getCurrentPosition(
+    locationSuccess,
+    locationError,
+    {timeout: 15000, maximumAge: 60000}
+  );
+}
+
+// Listen for when the watchface is opened
+Pebble.addEventListener('ready', 
+  function(e) {
+    console.log("PebbleKit JS ready!");
+    
+    // Get the initial weather
+    // if it is enabled in settings
+    if(claySettings.weather_enabled)
+    {
+      // use gps or fixed location based on settings
+      if(claySettings.weather_gps_on)
+      {
+        console.log("Gps");    
+        getWeatherWithGps();
+      }      
+      else
+      {
+        console.log("Fixed location");
+        //get fixed location from settings    
+        var location = claySettings.weather_fixed_location;
+        fetchWeatherFxdLocation(location);
+        
+      }
+    }
+   
+   
+      
+  }
+);
+
+
+
+// var myAPIKey = '';
+
+
+
+
+
+
+
+
+// Check when the message is received
+Pebble.addEventListener('appmessage',
+  function(e) {
+    console.log("AppMessage received!");    
+    if(claySettings.weather_gps_on)
+      getWeatherWithGps();
+    else
+    {
+      //get fixed location from settings    
+      var location = claySettings.weather_fixed_location;
+      fetchWeatherFxdLocation(location);
+      
+    }
+});

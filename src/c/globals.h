@@ -51,7 +51,7 @@
 #define WEATHER_ICON_W 32
 #define WEATHER_ICON_H 32
 
-#define WEATHER_ICON_TEXT_X 74
+#define WEATHER_ICON_TEXT_X 72
 #define WEATHER_ICON_TEXT_Y 106
 #define WEATHER_ICON_TEXT_W 69
 #define WEATHER_ICON_TEXT_H 15
@@ -84,15 +84,13 @@
 
  
 Window *main_window;
-GRect window_full_bounds;
 Layer *window_layer;
 
 TextLayer *textlayer_menubar, *textlayer_time, *textlayer_date, *textlayer_battery, *textlayer_weather;
 
-BitmapLayer *bitmaplayer_desktop_icons,*bitmaplayer_desktop_text, *bitmaplayer_menubar,*bitmaplayer_datetime_window,*bitmaplayer_bt, *bitmaplayer_qt, *bitmaplayer_battery;                          
+BitmapLayer *bitmaplayer_desktop_icons,*bitmaplayer_desktop_text, *bitmaplayer_menubar,*bitmaplayer_datetime_window,*bitmaplayer_bt, *bitmaplayer_qt, *bitmaplayer_battery, *bitmaplayer_weather;                          
   
-GBitmap *bitmap_desktop_text, *bitmap_desktop_icons, *bitmap_menubar, *bitmap_datatime_window,*bitmap_bt[2],
-        *bitmap_battery_bin[2], *bitmap_battery_icon[4];                        
+GBitmap *bitmap_desktop_text, *bitmap_desktop_icons, *bitmap_menubar, *bitmap_datatime_window,*bitmap_bt[2],*bitmap_battery_icon,*bitmap_weather_icon;                              
 
 #ifdef PBL_PLATFORM_APLITE
 GBitmap *bitmap_qt;
@@ -127,9 +125,7 @@ typedef struct ClaySettings {
   char battery_warning_level;
   bool switch_bin_state;
   bool weather_enabled;
-  bool weather_unit; //false - fahrenheit
-  bool weather_gps_on; 
-  uint8_t weather_interval;
+  uint8_t weather_update_interval;
 } ClaySettings;
 
 ClaySettings settings;
