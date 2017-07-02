@@ -30,31 +30,55 @@ function fetchWeatherFxdLocation(location)
 {
    
    var url = "http://api.openweathermap.org/data/2.5/weather?q="+ location +"&APPID=db8a85437a0dab1e93d39ca60326d0a1";// + claySettings.weather_api_key;
-  console.log(url);
+   console.log(url);
    fetchWeather(url);
 }
 
-function iconFromWeatherId(weatherId) {
-  if (weatherId < 233) { //thunderstorm
-    return 1;
-  } else if (weatherId < 532) { //shower rain/rain
-    return 2;
-  } else if (weatherId < 623) { //snow
-    return 3;
-  } else if (weatherId < 782) { //mist
-    return 4;
-  } else if (weatherId == 800) { //clear sky
-    return 5;
-  } else if (weatherId == 801) { //few clouds
-    return 6;
-  } else if (weatherId == 802) { //scattered clouds
-    return 7;
-  } else if (weatherId == 803 || weatherId == 804) { //broken clouds
-    return 8;
-  } else {
-    return 0;
-  }
+function iconFromWeatherIcon(iconId) {
+  //no breaks because we put same icon for day & night
+  switch(iconId) {
+		case "01d":
+		case "01n": return 1; // Clear day
+		case "02d":
+		case "02n": return 2; // few clouds
+		case "03d":
+		case "03n":  // scattered  clouds
+		case "04d":
+		case "04n": return 3; // broken clouds
+		case "09d":
+		case "09n":
+		case "10d":
+		case "10n": return 4; // Rain
+		case "11d":
+		case "11n": return 5; // Thunder
+		case "13d":
+		case "13n": return 6; // Snow
+		case "50d":
+		case "50n": return 7; // mist
+		default: return 0; // Not available
+	}
 }
+  
+//   if (weatherId < 233) { //thunderstorm
+//     return 1;
+//   } else if (weatherId < 532) { //shower rain/rain
+//     return 2;
+//   } else if (weatherId < 623) { //snow
+//     return 3;
+//   } else if (weatherId < 782) { //mist
+//     return 4;
+//   } else if (weatherId == 800) { //clear sky
+//     return 5;
+//   } else if (weatherId == 801) { //few clouds
+//     return 6;
+//   } else if (weatherId == 802) { //scattered clouds
+//     return 7;
+//   } else if (weatherId == 803 || weatherId == 804) { //broken clouds
+//     return 8;
+//   } else {
+//     return 0;
+//   }
+
 
 
 function fetchWeather(url)
@@ -73,10 +97,8 @@ function fetchWeather(url)
           console.log("Temperature is " + temperature);
       
           // Conditions
-          var icon = iconFromWeatherId(json.weather[0].id);
-          // var conditions = json.weather[0].main;      
-          //console.log('Conditions are ' + conditions);
-          
+          var icon = iconFromWeatherIcon(json.weather[0].icon);
+         
           // Push into a dictionary
           var dictionary = {
             "weather_temperature": temperature  + '\xB0C',
@@ -121,6 +143,8 @@ function getWeatherWithGps() {
   );
 }
 
+
+
 // Listen for when the watchface is opened
 Pebble.addEventListener('ready', 
   function(e) {
@@ -128,10 +152,14 @@ Pebble.addEventListener('ready',
     
     // Get the initial weather
     // if it is enabled in settings
-    if(claySettings.weather_enabled)
+    // comparision with null because user may skip clas settings window
+    // and setting will be uninicialized
+    //Pebble.showSimpleNotificationOnPebble("problem", "problem");
+   
+    if(claySettings === null || claySettings.weather_enabled)
     {
       // use gps or fixed location based on settings
-      if(claySettings.weather_gps_on)
+      if(claySettings === null || claySettings.weather_gps_on)
       {
         console.log("Gps");    
         getWeatherWithGps();
@@ -150,16 +178,6 @@ Pebble.addEventListener('ready',
       
   }
 );
-
-
-
-// var myAPIKey = '';
-
-
-
-
-
-
 
 
 // Check when the message is received

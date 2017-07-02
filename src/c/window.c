@@ -43,9 +43,8 @@ void window_load(Window *window)
   create_text_layers();
   add_layers_to_window(window_layer);
   
-  //set weather icon to loading (if enabled)
-  if(settings.weather_enabled)
-    switchBitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_LOADING);
+  //set weather icon to loading
+  switchBitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_FEW_CLOUDS);
   
   APP_LOG(APP_LOG_LEVEL_DEBUG, "used %zu; free: %zu",heap_bytes_used(),heap_bytes_free());
   window_update();
@@ -59,8 +58,9 @@ void window_unload(Window *window)
   text_layer_destroy(textlayer_time);
   text_layer_destroy(textlayer_date);
   text_layer_destroy(textlayer_battery);  
-  if(settings.weather_enabled)
-    text_layer_destroy(textlayer_weather);
+  text_layer_destroy(textlayer_weather);
+  text_layer_destroy(textlayer_month);
+  text_layer_destroy(textlayer_year);
   
   //bitmap layers
   bitmap_layer_destroy(bitmaplayer_desktop_icons);
@@ -70,8 +70,7 @@ void window_unload(Window *window)
   bitmap_layer_destroy(bitmaplayer_bt);
   bitmap_layer_destroy(bitmaplayer_qt);
   bitmap_layer_destroy(bitmaplayer_battery);
-  if(settings.weather_enabled)
-    bitmap_layer_destroy(bitmaplayer_weather);
+  bitmap_layer_destroy(bitmaplayer_weather);
   
   //bitmaps
   gbitmap_destroy(bitmap_desktop_text);
@@ -89,14 +88,14 @@ void window_unload(Window *window)
   #endif
   
   gbitmap_destroy(bitmap_battery_icon);
-  if(settings.weather_enabled)
-    gbitmap_destroy(bitmap_weather_icon);
+  gbitmap_destroy(bitmap_weather_icon);
   
   //fonts
   fonts_unload_custom_font(font_menubar);
   fonts_unload_custom_font(font_time);
   fonts_unload_custom_font(font_date);
   fonts_unload_custom_font(font_icon_text);  
+  fonts_unload_custom_font(font_year_month); 
 }
 
 void window_update()
@@ -118,7 +117,8 @@ void window_update()
   #endif
   
   //hide window
-  display_datetime_window(flick_show_dt_window);
+  display_datetime_window(!flick_show_dt_window);
+  
       
   update_time();
   update_date();
@@ -133,9 +133,10 @@ static void load_resources()
 {
   //FONTS
   font_menubar = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_15));
-  font_date = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_13));  
+  font_date = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_20));  
   font_time = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_23));
   font_icon_text = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_11));
+  font_year_month = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_14));
   
   //BITMAPS
   bitmap_desktop_text = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_DESKTOP_TEXTS);
@@ -164,8 +165,7 @@ static void create_bitmap_layers(GRect bounds)
   bitmaplayer_bt = bitmap_layer_create(GRect(BT_ICON_X,MB_ICON_Y,MB_ICON_W,MB_ICON_H));
   bitmaplayer_qt = bitmap_layer_create(GRect(QT_ICON_X,MB_ICON_Y,MB_ICON_W,MB_ICON_H));
   bitmaplayer_battery = bitmap_layer_create(GRect(BATTERY_ICON_X,BATTERY_ICON_Y,BATTERY_ICON_W,BATTERY_ICON_H));
-  if(settings.weather_enabled)
-    bitmaplayer_weather = bitmap_layer_create(GRect(WEATHER_ICON_X,WEATHER_ICON_Y,WEATHER_ICON_W,WEATHER_ICON_H));
+  bitmaplayer_weather = bitmap_layer_create(GRect(WEATHER_ICON_X,WEATHER_ICON_Y,WEATHER_ICON_W,WEATHER_ICON_H));
   
   //set corresponding bitmaps to them
   bitmap_layer_set_bitmap(bitmaplayer_desktop_icons,bitmap_desktop_icons);   
@@ -202,15 +202,17 @@ static void add_layers_to_window(Layer *window_layer)
   layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_menubar));
   layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_bt));
   layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_qt));
-  layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_battery));    
-   layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_weather));
+  layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_battery));  
   layer_add_child(window_layer,text_layer_get_layer(textlayer_battery));
-  layer_add_child(window_layer,text_layer_get_layer(textlayer_menubar));    
-  layer_add_child(window_layer,text_layer_get_layer(textlayer_weather)); 
+  layer_add_child(window_layer,text_layer_get_layer(textlayer_menubar));  
   
   layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_datetime_window));        
   layer_add_child(window_layer,text_layer_get_layer(textlayer_time));
-  layer_add_child(window_layer,text_layer_get_layer(textlayer_date));
+  layer_add_child(window_layer,text_layer_get_layer(textlayer_date));    
+  layer_add_child(window_layer,text_layer_get_layer(textlayer_month));
+  layer_add_child(window_layer,text_layer_get_layer(textlayer_year));
+  layer_add_child(window_layer,text_layer_get_layer(textlayer_weather));    
+  layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_weather));
   
 }
 
@@ -223,19 +225,25 @@ static void create_text_layers()
     GRect(TIME_DATETIME_X,TIME_DATETIME_Y, TIME_DATETIME_W, TIME_DATETIME_H));
   textlayer_date = text_layer_create(
     GRect(DATE_DATETIME_X,DATE_DATETIME_Y, DATE_DATETIME_W, DATE_DATETIME_H));
+  
+  textlayer_month = text_layer_create(
+    GRect(MONTH_DATETIME_X,MONTH_DATETIME_Y, MONTH_DATETIME_W, MONTH_DATETIME_H));
+  textlayer_year = text_layer_create(
+    GRect(YEAR_DATETIME_X,YEAR_DATETIME_Y, YEAR_DATETIME_W, YEAR_DATETIME_H)); 
+  
   textlayer_battery = text_layer_create(
     GRect(BATTERY_ICON_TEXT_X, BATTERY_ICON_TEXT_Y,BATTERY_ICON_TEXT_W, BATTERY_ICON_TEXT_H));
-  if(settings.weather_enabled)
-    textlayer_weather = text_layer_create(
-      GRect(WEATHER_ICON_TEXT_X,WEATHER_ICON_TEXT_Y,WEATHER_ICON_TEXT_W,WEATHER_ICON_TEXT_H));
+  textlayer_weather = text_layer_create(
+      GRect(WEATHER_TEXT_X,WEATHER_TEXT_Y,WEATHER_TEXT_W,WEATHER_TEXT_H));
   
   //set up layers with colors, text, fonts etc.
   set_up_text_layer(textlayer_menubar, GColorClear, GColorBlack, "44:44", font_menubar,GTextAlignmentCenter);
   set_up_text_layer(textlayer_time, GColorClear, GColorBlack, "44:44", font_time,GTextAlignmentCenter);
-  set_up_text_layer(textlayer_date, GColorClear, GColorBlack, "44-44-2044", font_date,GTextAlignmentCenter);
+  set_up_text_layer(textlayer_date, GColorClear, GColorWhite, "88", font_date,GTextAlignmentCenter);
+  set_up_text_layer(textlayer_month, GColorRed, GColorWhite, "Jan", font_year_month,GTextAlignmentRight);
+  set_up_text_layer(textlayer_year, GColorRed, GColorWhite, "2017", font_year_month,GTextAlignmentLeft);
   set_up_text_layer(textlayer_battery, GColorClear, GColorBlack, "Recycle Bin", font_icon_text,GTextAlignmentCenter);
-  if(settings.weather_enabled)
-    set_up_text_layer(textlayer_weather, GColorClear, GColorBlack, "Loading...", font_icon_text,GTextAlignmentCenter);
+  set_up_text_layer(textlayer_weather, GColorClear, GColorBlack, "Loading...", font_icon_text,GTextAlignmentLeft);
 }
 
 static void set_up_text_layer(TextLayer *layer, GColor background, GColor text_color, const char * text,GFont font,GTextAlignment alignment)
@@ -324,10 +332,7 @@ void updateWeatherTextIcon(const char * temp, uint8_t icon_num)
     case 6:
       switchBitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_FEW_CLOUDS);
       break;
-    case 7:
-      switchBitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_SCATTERED_CLOUD);
-      break;
-    case 8:     
+    case 7:   
       switchBitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_BROKEN_CLOUDS);
       break;      
     default:

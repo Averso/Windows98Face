@@ -25,7 +25,6 @@ static void load_default_settings()
   settings.battery_mode = false; //false = Recycle Bin
   settings.battery_warning_level = BATTERY_DEFAULT_WARNING_LVL;
   settings.switch_bin_state = false;
-  settings.weather_enabled=true;
   settings.weather_update_interval=30;
 
 }

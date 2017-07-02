@@ -182,12 +182,7 @@ void inbox_received_handler(DictionaryIterator *iter, void *context)
   if(switch_bin_t)
    settings.switch_bin_state = switch_bin_t->value->int32 == 1;
   
-  
-  //weather enabled
-  Tuple *weather_enabled_t = dict_find(iter, MESSAGE_KEY_weather_enabled);
-  if(weather_enabled_t)
-   settings.weather_enabled = weather_enabled_t->value->int32 == 1;
-  
+    
   //weather update interval
   Tuple *weather_update_interval_t = dict_find(iter, MESSAGE_KEY_weather_update_interval);  
   if(weather_update_interval_t) 
@@ -204,7 +199,7 @@ void inbox_received_handler(DictionaryIterator *iter, void *context)
   Tuple *icon_tuple = dict_find(iter, MESSAGE_KEY_weather_icon);
   if(temp_tuple && icon_tuple) {
     snprintf(temperature_buffer, sizeof(temperature_buffer), "%s", temp_tuple->value->cstring);
-    updateWeatherTextIcon(temperature_buffer,icon_tuple->value->uint8);
+    //updateWeatherTextIcon(temperature_buffer,icon_tuple->value->uint8);
   }
     
   

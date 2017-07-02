@@ -22,9 +22,9 @@
 #define ICONS_TEXTS_H 51  
 
 //DATETIME WINDOW
-#define DT_WINDOW_X 19
+#define DT_WINDOW_X 7
 #define DT_WINDOW_Y 9
-#define DT_WINDOW_W 120
+#define DT_WINDOW_W 134
 #define DT_WINDOW_H 117
 
 //MENUBAR ICONS
@@ -46,15 +46,15 @@
 #define BATTERY_ICON_TEXT_H 15
 
 //WEATHER ICON AND TEXT
-#define WEATHER_ICON_X 90
-#define WEATHER_ICON_Y 70
-#define WEATHER_ICON_W 32
-#define WEATHER_ICON_H 32
+#define WEATHER_ICON_X DT_WINDOW_X + 6
+#define WEATHER_ICON_Y DT_WINDOW_Y + 95
+#define WEATHER_ICON_W 16
+#define WEATHER_ICON_H 16
 
-#define WEATHER_ICON_TEXT_X 72
-#define WEATHER_ICON_TEXT_Y 106
-#define WEATHER_ICON_TEXT_W 69
-#define WEATHER_ICON_TEXT_H 15
+#define WEATHER_TEXT_X DT_WINDOW_X + 28
+#define WEATHER_TEXT_Y DT_WINDOW_Y + 96
+#define WEATHER_TEXT_W 88
+#define WEATHER_TEXT_H 15
 
 //TEXTS
 #define TIME_MENUBAR_X 101
@@ -62,15 +62,25 @@
 #define TIME_MENUBAR_W 38
 #define TIME_MENUBAR_H 20
 
-#define TIME_DATETIME_X DT_WINDOW_X + 10
-#define TIME_DATETIME_Y DT_WINDOW_Y + 38
-#define TIME_DATETIME_W 100
-#define TIME_DATETIME_H 28
+#define TIME_DATETIME_X DT_WINDOW_X + 27
+#define TIME_DATETIME_Y DT_WINDOW_Y + 30
+#define TIME_DATETIME_W 98
+#define TIME_DATETIME_H 27
 
-#define DATE_DATETIME_X DT_WINDOW_X + 10
-#define DATE_DATETIME_Y DT_WINDOW_Y + 89
-#define DATE_DATETIME_W 100
-#define DATE_DATETIME_H 16
+#define DATE_DATETIME_X DT_WINDOW_X + 64
+#define DATE_DATETIME_Y DT_WINDOW_Y + 62
+#define DATE_DATETIME_W 24
+#define DATE_DATETIME_H 25
+
+#define MONTH_DATETIME_X DT_WINDOW_X + 26
+#define MONTH_DATETIME_Y DT_WINDOW_Y + 66
+#define MONTH_DATETIME_W 34
+#define MONTH_DATETIME_H 20
+
+#define YEAR_DATETIME_X DT_WINDOW_X + 91
+#define YEAR_DATETIME_Y DT_WINDOW_Y + 66
+#define YEAR_DATETIME_W 35
+#define YEAR_DATETIME_H 20
 
 //OTHERS
 #define BATTERY_STATES_NUM 4
@@ -86,7 +96,7 @@
 Window *main_window;
 Layer *window_layer;
 
-TextLayer *textlayer_menubar, *textlayer_time, *textlayer_date, *textlayer_battery, *textlayer_weather;
+TextLayer *textlayer_menubar, *textlayer_time, *textlayer_date, *textlayer_month, *textlayer_year, *textlayer_battery, *textlayer_weather;
 
 BitmapLayer *bitmaplayer_desktop_icons,*bitmaplayer_desktop_text, *bitmaplayer_menubar,*bitmaplayer_datetime_window,*bitmaplayer_bt, *bitmaplayer_qt, *bitmaplayer_battery, *bitmaplayer_weather;                          
   
@@ -99,7 +109,7 @@ GBitmap *bitmap_qt[2];
 #endif
 
 
-GFont font_menubar, font_date, font_time, font_icon_text;
+GFont font_menubar, font_date, font_time, font_icon_text, font_year_month;
 
 GColor color_desktop_text;
 uint8_t battery_level;
@@ -124,7 +134,6 @@ typedef struct ClaySettings {
   bool battery_mode; //false = Recycle Bin
   char battery_warning_level;
   bool switch_bin_state;
-  bool weather_enabled;
   uint8_t weather_update_interval;
 } ClaySettings;
 

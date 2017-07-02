@@ -10,7 +10,7 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
     update_date(); 
   
   //  Get weather update every 30 minutes
-  if(settings.weather_enabled && (tick_time->tm_min % settings.weather_update_interval == 0)) {
+  if(tick_time->tm_min % settings.weather_update_interval == 0) {
     // Begin dictionary
     DictionaryIterator *iter;
     app_message_outbox_begin(&iter);
@@ -32,7 +32,7 @@ void update_time()
   static char time_buff[9];
   static char time_menubar_buff[9];  
   
-  strftime(time_buff,sizeof(time_buff), clock_is_24h_style() ? "%H:%M" : "%I:%M %p", tick_time);
+  strftime(time_buff,sizeof(time_buff), clock_is_24h_style() ? "%H:%M" : "%I:%M", tick_time);
   strftime(time_menubar_buff,sizeof(time_menubar_buff), clock_is_24h_style() ? "%H:%M" : "%I:%M", tick_time); 
 
   //set time text in data&time text layer
@@ -57,8 +57,14 @@ void update_date()
   struct tm *tick_time = localtime(&temp);
   
   static char date_buff[11];
-  strftime(date_buff, sizeof(date_buff), settings.date_format ?"%m-%d-%Y" : "%d-%m-%Y", tick_time);
-
+  static char month_buff[4];
+  static char year_buff[5];
+  strftime(date_buff, sizeof(date_buff), "%d", tick_time);
+  strftime(month_buff, sizeof(month_buff), "%b", tick_time);
+  strftime(year_buff, sizeof(year_buff), "%Y", tick_time);
+  
   text_layer_set_text(textlayer_date, date_buff);
+  text_layer_set_text(textlayer_month, month_buff);
+   text_layer_set_text(textlayer_year, year_buff);
  
 }
