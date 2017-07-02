@@ -106,13 +106,11 @@ void window_update()
   //get&set colors for text, background from settings
   #ifdef PBL_COLOR  
   window_set_background_color(main_window, settings.color_background);     
-  text_layer_set_text_color(textlayer_battery,settings.color_text);  
-  text_layer_set_text_color(textlayer_weather,settings.color_text); 
+  text_layer_set_text_color(textlayer_battery,settings.color_text);   
   gbitmap_fill_all_except(GColorClear,settings.color_text,false,bitmap_desktop_text,bitmaplayer_desktop_text);  
   #else //diorite/aplite
   window_set_background_color(main_window, (settings.color_background) ? GColorWhite : GColorBlack);    
   text_layer_set_text_color(textlayer_battery, (settings.color_background) ? GColorBlack : GColorWhite);
-  text_layer_set_text_color(textlayer_weather, (settings.color_background) ? GColorBlack : GColorWhite);  
   gbitmap_fill_all_except(GColorClear,(settings.color_background) ? GColorBlack : GColorWhite,false,bitmap_desktop_text,bitmaplayer_desktop_text);  
   #endif
   
@@ -136,7 +134,7 @@ static void load_resources()
   font_date = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_20));  
   font_time = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_23));
   font_icon_text = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_11));
-  font_year_month = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_14));
+  font_year_month = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_18));
   
   //BITMAPS
   bitmap_desktop_text = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_DESKTOP_TEXTS);
@@ -240,8 +238,8 @@ static void create_text_layers()
   set_up_text_layer(textlayer_menubar, GColorClear, GColorBlack, "44:44", font_menubar,GTextAlignmentCenter);
   set_up_text_layer(textlayer_time, GColorClear, GColorBlack, "44:44", font_time,GTextAlignmentCenter);
   set_up_text_layer(textlayer_date, GColorClear, GColorWhite, "88", font_date,GTextAlignmentCenter);
-  set_up_text_layer(textlayer_month, GColorRed, GColorWhite, "Jan", font_year_month,GTextAlignmentRight);
-  set_up_text_layer(textlayer_year, GColorRed, GColorWhite, "2017", font_year_month,GTextAlignmentLeft);
+  set_up_text_layer(textlayer_month, GColorClear, GColorBlack, "May", font_year_month,GTextAlignmentCenter);
+  set_up_text_layer(textlayer_year, GColorRed, GColorBlack, "2017", font_year_month,GTextAlignmentCenter);
   set_up_text_layer(textlayer_battery, GColorClear, GColorBlack, "Recycle Bin", font_icon_text,GTextAlignmentCenter);
   set_up_text_layer(textlayer_weather, GColorClear, GColorBlack, "Loading...", font_icon_text,GTextAlignmentLeft);
 }

@@ -65,6 +65,6 @@ void update_date()
   
   text_layer_set_text(textlayer_date, date_buff);
   text_layer_set_text(textlayer_month, month_buff);
-   text_layer_set_text(textlayer_year, year_buff);
+  text_layer_set_text(textlayer_year, year_buff);
  
 }

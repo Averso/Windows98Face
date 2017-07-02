@@ -175,7 +175,7 @@
                 {
                     "characterRegex": "[a-zA-Z0-9]",
                     "file": "fonts/Microsoft Sans Serif.ttf",
-                    "name": "FONT_TEXT_14",
+                    "name": "FONT_TEXT_18",
                     "targetPlatforms": null,
                     "type": "font"
                 },
