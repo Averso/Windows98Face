@@ -12,79 +12,79 @@ static void deinit(void);
 
 int main(void)
 {
-  init();
-  app_event_loop();
-  deinit();
+    init();
+    app_event_loop();
+    deinit();
 }
 
 static void init(void)
 {
-  //VARIABLES INIT
-  flick_show_dt_window = false;  
-  is_connected = true;
+    LOG_FUNC_START("init");
   
-  main_window = window_create();
+    //VARIABLES INIT
+    flick_show_dt_window = false;  
+    is_connected = true;
   
-  if(main_window)
-  { 
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "used %zu; free: %zu",heap_bytes_used(),heap_bytes_free());
-    //Load settings
-    load_settings();
+    main_window = window_create();
+  
+    if(main_window)
+    { 
+   
+        load_settings();
     
-    //open AppMessage
-    app_message_register_inbox_received(inbox_received_handler);
-    app_message_open(256, 256);
+        //open AppMessage
+        app_message_register_inbox_received(inbox_received_handler);
+        app_message_open(256, 256);
     
-    //WINDOW      
-    window_set_window_handlers(main_window,(WindowHandlers){
-         .load = window_load,
-         .unload = window_unload
-    });
+        //WINDOW      
+        window_set_window_handlers(main_window,(WindowHandlers){
+            .load = window_load,
+            .unload = window_unload
+        });
     
-    window_stack_push(main_window,true);
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "used %zu; free: %zu",heap_bytes_used(),heap_bytes_free());
+        window_stack_push(main_window,true);
+   
     
-    //UnobstructedArea
-    #if PBL_API_EXISTS(unobstructed_area_service_subscribe)
-     UnobstructedAreaHandlers handlers = {
-      .will_change = unobstructed_will_change_callback,
-      .change = unobstructed_change_callback,
-      .did_change = unobstructed_did_change_callback
-    };
-    unobstructed_area_service_subscribe(handlers, NULL);
-    #endif
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "used %zu; free: %zu",heap_bytes_used(),heap_bytes_free());
-    //TAP EVENTS
-    accel_tap_service_subscribe(accel_tap_callback); 
+        //UnobstructedArea
+        #if PBL_API_EXISTS(unobstructed_area_service_subscribe)
+         UnobstructedAreaHandlers handlers = {
+             .will_change = unobstructed_will_change_callback,
+             .change = unobstructed_change_callback,
+             .did_change = unobstructed_did_change_callback
+        };
+        unobstructed_area_service_subscribe(handlers, NULL);
+        #endif
+    
+        //TAP EVENTS
+        accel_tap_service_subscribe(accel_tap_callback); 
         
-    //BATTERY
-    battery_state_service_subscribe(battery_callback); 
+        //BATTERY
+        battery_state_service_subscribe(battery_callback); 
     
-    //BLUETOOTH
-    connection_service_subscribe((ConnectionHandlers){
-      .pebble_app_connection_handler = bluetooth_callback
-    });
+        //BLUETOOTH
+        connection_service_subscribe((ConnectionHandlers){
+           .pebble_app_connection_handler = bluetooth_callback
+        });
     
-    //TIMER
-    tick_timer_service_subscribe(MINUTE_UNIT | DAY_UNIT, tick_handler);
-    
-    //GET STATES
-    
+        //TIMER
+        tick_timer_service_subscribe(MINUTE_UNIT | DAY_UNIT, tick_handler);
+  
   }
 }
 
 static void deinit(void)
 {
-  if(main_window)
-  {
-     window_destroy(main_window);
-      
+    LOG_FUNC_START("deinit");
+  
+    if(main_window)
+    {
+         window_destroy(main_window);     
      
-     tick_timer_service_unsubscribe();
-     connection_service_unsubscribe();
-     battery_state_service_unsubscribe();
-     accel_tap_service_unsubscribe();  
-     unobstructed_area_service_unsubscribe();
-  }
+         tick_timer_service_unsubscribe();
+         connection_service_unsubscribe();
+         battery_state_service_unsubscribe();
+         accel_tap_service_unsubscribe();  
+         unobstructed_area_service_unsubscribe();
+    }
  
 }

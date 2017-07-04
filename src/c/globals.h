@@ -1,6 +1,11 @@
 #pragma once
 #include <pebble.h>
 
+//LOG
+#define LOG_CALLBACK_START(name) APP_LOG(APP_LOG_LEVEL_DEBUG, "%s called", name)
+#define LOG_FUNC_START(name) APP_LOG(APP_LOG_LEVEL_DEBUG, "%s invoked", name)
+#define LOG_MEMORY() APP_LOG(APP_LOG_LEVEL_DEBUG, "used %zu; free: %zu",heap_bytes_used(),heap_bytes_free());
+
 //COORDINATES
 
 //MENUBAR

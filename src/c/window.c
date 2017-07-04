@@ -25,34 +25,34 @@ static void bitmap_layers_turn_on_transparency();
 static void set_up_text_layer(TextLayer *layer, GColor background, GColor text_color, const char * text,GFont font,GTextAlignment alignment);
 
 /* Switch bitmap in given layer.*/
-static void switchBitmap(BitmapLayer *layer, GBitmap *bitmap, int resource);
+static void switch_bitmap(BitmapLayer *layer, GBitmap *bitmap, int resource);
 
 
 void window_load(Window *window)
 {
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "used %zu; free: %zu",heap_bytes_used(),heap_bytes_free());
-  //get window layer and bounds
-  window_layer = window_get_root_layer(window);
-  GRect window_full_bounds = layer_get_bounds(window_layer);
+  LOG_FUNC_START("window_load");  
+  LOG_MEMORY();  
   
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "used %zu; free: %zu",heap_bytes_used(),heap_bytes_free());
-  //prepare and add to window text&bitmap resources
+  window_layer = window_get_root_layer(window);
+  GRect window_full_bounds = layer_get_bounds(window_layer);  
+  
   load_resources();
   create_bitmap_layers(window_full_bounds);
   bitmap_layers_turn_on_transparency();
   create_text_layers();
-  add_layers_to_window(window_layer);
+  add_layers_to_window(window_layer);  
   
-  //set weather icon to loading
-  switchBitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_FEW_CLOUDS);
-  
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "used %zu; free: %zu",heap_bytes_used(),heap_bytes_free());
+  switch_bitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_FEW_CLOUDS);
+   
+  LOG_MEMORY();  
   window_update();
   
 }
 
 void window_unload(Window *window)
 {
+  LOG_FUNC_START("window_unload");  
+  
   //text layers
   text_layer_destroy(textlayer_menubar);
   text_layer_destroy(textlayer_time);
@@ -100,10 +100,10 @@ void window_unload(Window *window)
 
 void window_update()
 {
-  //check bluetooth status
-  bluetooth_callback(connection_service_peek_pebble_app_connection());     
-  
-  //get&set colors for text, background from settings
+  LOG_FUNC_START("window_update");  
+   
+  bluetooth_callback(connection_service_peek_pebble_app_connection());       
+ 
   #ifdef PBL_COLOR  
   window_set_background_color(main_window, settings.color_background);     
   text_layer_set_text_color(textlayer_battery,settings.color_text);   
@@ -113,22 +113,21 @@ void window_update()
   text_layer_set_text_color(textlayer_battery, (settings.color_background) ? GColorBlack : GColorWhite);
   gbitmap_fill_all_except(GColorClear,(settings.color_background) ? GColorBlack : GColorWhite,false,bitmap_desktop_text,bitmaplayer_desktop_text);  
   #endif
-  
-  //hide window
-  display_datetime_window(!flick_show_dt_window);
-  
-      
+    
+  display_datetime_window(flick_show_dt_window);
+        
   update_time();
-  update_date();
+  update_date();  
   
-  //check battery - to update battery icon
   battery_callback(battery_state_service_peek());
   
- 
+  LOG_MEMORY();    
 }
 
 static void load_resources()
 {
+  LOG_FUNC_START("load_resources");  
+  
   //FONTS
   font_menubar = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_15));
   font_date = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TEXT_20));  
@@ -155,6 +154,8 @@ static void load_resources()
 
 static void create_bitmap_layers(GRect bounds)
 {
+  LOG_FUNC_START("create_bitmap_layers");
+  
   //create bitmap layers
   bitmaplayer_desktop_icons = bitmap_layer_create(bounds);  
   bitmaplayer_desktop_text = bitmap_layer_create(bounds);  
@@ -182,6 +183,8 @@ static void create_bitmap_layers(GRect bounds)
 
 static void bitmap_layers_turn_on_transparency()
 {
+  LOG_FUNC_START("bitmap_layers_turn_on_transparency");
+  
   bitmap_layer_set_compositing_mode(bitmaplayer_desktop_icons, GCompOpSet); 
   bitmap_layer_set_compositing_mode(bitmaplayer_desktop_text, GCompOpSet); 
   bitmap_layer_set_compositing_mode(bitmaplayer_menubar, GCompOpSet);   
@@ -194,6 +197,7 @@ static void bitmap_layers_turn_on_transparency()
 
 static void add_layers_to_window(Layer *window_layer)
 {
+  LOG_FUNC_START("add_layers_to_window");
   
   layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_desktop_icons));
   layer_add_child(window_layer,bitmap_layer_get_layer(bitmaplayer_desktop_text));
@@ -216,6 +220,8 @@ static void add_layers_to_window(Layer *window_layer)
 
 static void create_text_layers()
 {
+  LOG_FUNC_START("create_text_layers");
+  
   //create layers
   textlayer_menubar = text_layer_create(
     GRect(TIME_MENUBAR_X, TIME_MENUBAR_Y, TIME_MENUBAR_W, TIME_MENUBAR_H));  
@@ -238,14 +244,15 @@ static void create_text_layers()
   set_up_text_layer(textlayer_menubar, GColorClear, GColorBlack, "44:44", font_menubar,GTextAlignmentCenter);
   set_up_text_layer(textlayer_time, GColorClear, GColorBlack, "44:44", font_time,GTextAlignmentCenter);
   set_up_text_layer(textlayer_date, GColorClear, GColorWhite, "88", font_date,GTextAlignmentCenter);
-  set_up_text_layer(textlayer_month, GColorClear, GColorBlack, "May", font_year_month,GTextAlignmentCenter);
-  set_up_text_layer(textlayer_year, GColorRed, GColorBlack, "2017", font_year_month,GTextAlignmentCenter);
+  set_up_text_layer(textlayer_month, GColorClear, GColorBlack, "May", font_year_month,GTextAlignmentRight);
+  set_up_text_layer(textlayer_year, GColorClear, GColorBlack, "2017", font_year_month,GTextAlignmentLeft);
   set_up_text_layer(textlayer_battery, GColorClear, GColorBlack, "Recycle Bin", font_icon_text,GTextAlignmentCenter);
   set_up_text_layer(textlayer_weather, GColorClear, GColorBlack, "Loading...", font_icon_text,GTextAlignmentLeft);
 }
 
 static void set_up_text_layer(TextLayer *layer, GColor background, GColor text_color, const char * text,GFont font,GTextAlignment alignment)
-{
+{  
+  
   text_layer_set_background_color(layer, background);
   text_layer_set_text_color(layer, text_color);
   text_layer_set_text(layer, text);
@@ -254,14 +261,23 @@ static void set_up_text_layer(TextLayer *layer, GColor background, GColor text_c
 }
 
 void display_datetime_window(bool show)
-{
-  layer_set_hidden(text_layer_get_layer(textlayer_time),!show);
-  layer_set_hidden(text_layer_get_layer(textlayer_date),!show);
-  layer_set_hidden(bitmap_layer_get_layer(bitmaplayer_datetime_window),!show);  
+{ 
+    LOG_FUNC_START("display_datetime_window");
+  
+    layer_set_hidden(text_layer_get_layer(textlayer_time),!show);
+    layer_set_hidden(text_layer_get_layer(textlayer_date),!show);
+    layer_set_hidden(text_layer_get_layer(textlayer_month),!show);
+    layer_set_hidden(text_layer_get_layer(textlayer_year),!show);
+    layer_set_hidden(text_layer_get_layer(textlayer_weather),!show);
+    layer_set_hidden(bitmap_layer_get_layer(bitmaplayer_weather),!show);
+    layer_set_hidden(bitmap_layer_get_layer(bitmaplayer_datetime_window),!show);
+    
 }
 
 void show_battery_menubar()
 {
+   LOG_FUNC_START("show_battery_menubar");
+  
    static char buffer[5];
    snprintf(buffer, sizeof(buffer), "%d%%", battery_level);  
    text_layer_set_text(textlayer_menubar, buffer);    
@@ -279,71 +295,72 @@ void move_layer_vertically(GRect bounds,char offset, Layer *layer)
 }
 
 void update_battery_icon()
-{  
-  if(settings.battery_mode) //baterry icon
-  {
-     //change battery image depending on battery lvl  
-    if(battery_level<=100 && battery_level>50)      
-      switchBitmap(bitmaplayer_battery,bitmap_battery_icon,RESOURCE_ID_IMAGE_BATTERY_ICON_100);
-    else if (battery_level<=50 && battery_level>25)    
-      switchBitmap(bitmaplayer_battery,bitmap_battery_icon,RESOURCE_ID_IMAGE_BATTERY_ICON_50);
-    else if (battery_level<=25 && battery_level>10)
-      switchBitmap(bitmaplayer_battery,bitmap_battery_icon,RESOURCE_ID_IMAGE_BATTERY_ICON_25);
-    else
-      switchBitmap(bitmaplayer_battery,bitmap_battery_icon,RESOURCE_ID_IMAGE_BATTERY_ICON_10);
-  }
-  else
-  {
-    //change recycle bin image depending on battery lvl  
-    if(battery_level<=100 && battery_level>settings.battery_warning_level)
-      switchBitmap(bitmaplayer_battery,bitmap_battery_icon,settings.switch_bin_state ? RESOURCE_ID_IMAGE_BIN_LOW : RESOURCE_ID_IMAGE_BIN_HIGH);
-    else     
-      switchBitmap(bitmaplayer_battery,bitmap_battery_icon,settings.switch_bin_state ? RESOURCE_ID_IMAGE_BIN_HIGH : RESOURCE_ID_IMAGE_BIN_LOW);
-     
-  }
+{ 
+    if(settings.battery_mode) //baterry icon
+    {
+        //change battery image depending on battery lvl  
+        if(battery_level<=100 && battery_level>50)      
+            switch_bitmap(bitmaplayer_battery,bitmap_battery_icon,RESOURCE_ID_IMAGE_BATTERY_ICON_100);
+        else if (battery_level<=50 && battery_level>25)    
+            switch_bitmap(bitmaplayer_battery,bitmap_battery_icon,RESOURCE_ID_IMAGE_BATTERY_ICON_50);
+        else if (battery_level<=25 && battery_level>10)
+            switch_bitmap(bitmaplayer_battery,bitmap_battery_icon,RESOURCE_ID_IMAGE_BATTERY_ICON_25);
+        else
+            switch_bitmap(bitmaplayer_battery,bitmap_battery_icon,RESOURCE_ID_IMAGE_BATTERY_ICON_10);
+   }
+   else
+   {
+       //change recycle bin image depending on battery lvl  
+       if(battery_level<=100 && battery_level>settings.battery_warning_level)
+          switch_bitmap(bitmaplayer_battery,bitmap_battery_icon,settings.switch_bin_state ? RESOURCE_ID_IMAGE_BIN_LOW : RESOURCE_ID_IMAGE_BIN_HIGH);
+       else     
+          switch_bitmap(bitmaplayer_battery,bitmap_battery_icon,settings.switch_bin_state ? RESOURCE_ID_IMAGE_BIN_HIGH : RESOURCE_ID_IMAGE_BIN_LOW);     
+   }
     
 }
 
-void updateWeatherTextIcon(const char * temp, uint8_t icon_num)
+void update_weather_text_icon(const char * temp, uint8_t icon_num)
 {
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "icon %d",icon_num);
-  static char temperature_buffer[8];
-  snprintf(temperature_buffer, sizeof(temperature_buffer), "%s", temp);
-  text_layer_set_text(textlayer_weather, temperature_buffer);
+    LOG_FUNC_START("update_weather_text_icon");
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "icon number %d",icon_num);
   
-  switch(icon_num){
-    case 1:
-      switchBitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_THUNDERSTORM);
-      break;
-    case 2:
-      switchBitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_RAIN);
-      break;
-    case 3:
-      switchBitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_SNOW);
-      break;
-    case 4:
-      switchBitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_MIST);
-      break;
-    case 5:
-      switchBitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_CLEAR_SKY);
-      break;
-    case 6:
-      switchBitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_FEW_CLOUDS);
-      break;
-    case 7:   
-      switchBitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_BROKEN_CLOUDS);
-      break;      
-    default:
-      switchBitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_NOT_AVAILABLE);
-      break;
+    static char temperature_buffer[8];
+    snprintf(temperature_buffer, sizeof(temperature_buffer), "%s", temp);
+    text_layer_set_text(textlayer_weather, temperature_buffer);
+  
+    switch(icon_num){
+        case 1:
+            switch_bitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_CLEAR_SKY);
+            break;
+        case 2:
+            switch_bitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_FEW_CLOUDS);
+            break;
+        case 3:
+            switch_bitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_BROKEN_CLOUDS);
+            break;
+        case 4:
+            switch_bitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_RAIN);
+            break;
+        case 5:
+            switch_bitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_THUNDERSTORM);
+            break;
+        case 6:
+            switch_bitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_SNOW);
+            break;
+        case 7:   
+            switch_bitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_MIST);
+            break;      
+        default:
+            switch_bitmap(bitmaplayer_weather,bitmap_weather_icon,RESOURCE_ID_IMAGE_NOT_AVAILABLE);
+            break;
   }
   
   
 }
 
-static void switchBitmap(BitmapLayer *layer,GBitmap *bitmap, int resource)
+static void switch_bitmap(BitmapLayer *layer,GBitmap *bitmap, int resource)
 {
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "here changing");
+    LOG_FUNC_START("switch_bitmap");
     gbitmap_destroy(bitmap);
     bitmap = gbitmap_create_with_resource(resource);
     bitmap_layer_set_bitmap(layer,bitmap);     

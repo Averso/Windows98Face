@@ -9,40 +9,42 @@ static void load_default_settings();
 
 
 static void load_default_settings()
-{  
-  #ifdef PBL_COLOR
-  settings.color_background = GColorTiffanyBlue;
-  settings.color_text = GColorWhite;
-  #endif
+{    
+    LOG_FUNC_START("load_default_settings");
+    #ifdef PBL_COLOR
+    settings.color_background = GColorTiffanyBlue;
+    settings.color_text = GColorWhite;
+    #endif
   
-  #ifdef PBL_BW
-  settings.color_background = true;
-  #endif  
+    #ifdef PBL_BW
+    settings.color_background = true;
+    #endif  
   
-  settings.vibe_on_disconnect = true;
-  settings.date_format = false; 
-  settings.flick_display_duration = 10;  
-  settings.battery_mode = false; //false = Recycle Bin
-  settings.battery_warning_level = BATTERY_DEFAULT_WARNING_LVL;
-  settings.switch_bin_state = false;
-  settings.weather_update_interval=30;
+    settings.vibe_on_disconnect = true;
+    settings.date_format = false; 
+    settings.flick_display_duration = 10;  
+    settings.battery_mode = false;
+    settings.battery_warning_level = BATTERY_DEFAULT_WARNING_LVL;
+    settings.switch_bin_state = false;
+    settings.weather_update_interval=30;
 
 }
 
 void save_settings()
 {
-  persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));    
+    LOG_FUNC_START("save_settings");
   
-  //refresh window 
-  window_update();
+    persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));    
+  
+    window_update();
 }
 
 void load_settings()
 {
-  // Load the default settings
-  load_default_settings();
+    LOG_FUNC_START("load_settings");
   
-  // Read settings from persistent storage, if they exist
-  persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
+    load_default_settings();
+  
+    persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
 }
 
